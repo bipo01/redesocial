@@ -11,10 +11,13 @@ comentarioForm.forEach((el, i) => {
         const formData = new FormData(comentarioForm[i]);
         const urlParams = new URLSearchParams(formData);
 
-        const response = await fetch("http://localhost:3000/new-comentario", {
-            method: "post",
-            body: urlParams,
-        });
+        const response = await fetch(
+            "https://redesocial-phi.vercel.app/new-comentario",
+            {
+                method: "post",
+                body: urlParams,
+            }
+        );
         const data = await response.json();
 
         console.log(data);
@@ -89,7 +92,7 @@ function deletarComentario(el) {
     const formData = new FormData(el);
     const urlParams = new URLSearchParams(formData);
 
-    fetch("http://localhost:3000/delete-comentario", {
+    fetch("https://redesocial-phi.vercel.app/delete-comentario", {
         method: "post",
         body: urlParams,
     });

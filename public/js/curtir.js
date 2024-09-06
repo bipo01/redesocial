@@ -36,7 +36,7 @@ btnCurtir.forEach((el) => {
 async function curtir(n, i, c) {
     try {
         const response = await fetch(
-            `http://localhost:3000/curtir?idpost=${i}&ac=${c}`
+            `https://redesocial-phi.vercel.app/curtir?idpost=${i}&ac=${c}`
         );
         const curtidas = await response.json();
 

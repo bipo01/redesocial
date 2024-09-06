@@ -38,10 +38,13 @@ btnUsuarios.forEach((el) => {
         const formData = new FormData(pegarMensagensForm);
         const urlParams = new URLSearchParams(formData);
 
-        const response = await fetch("http://localhost:3000/pegar-mensagens", {
-            method: "post",
-            body: urlParams,
-        });
+        const response = await fetch(
+            "https://redesocial-phi.vercel.app/pegar-mensagens",
+            {
+                method: "post",
+                body: urlParams,
+            }
+        );
         const data = await response.json();
 
         mensagens.innerHTML = "";
@@ -77,10 +80,13 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     const formData = new FormData(enviarMensagemForm);
     const urlParams = new URLSearchParams(formData);
 
-    const response = await fetch("http://localhost:3000/enviar-mensagem", {
-        method: "post",
-        body: urlParams,
-    });
+    const response = await fetch(
+        "https://redesocial-phi.vercel.app/enviar-mensagem",
+        {
+            method: "post",
+            body: urlParams,
+        }
+    );
 
     const data = await response.json();
     mensagens.innerHTML = "";
@@ -90,7 +96,7 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
 setInterval(async () => {
     if (!idUser.value) return;
     const response = await fetch(
-        `http://localhost:3000/pegar-mensagens-tempo-real`
+        `https://redesocial-phi.vercel.app/pegar-mensagens-tempo-real`
     );
 
     const allData = await response.json();
@@ -129,7 +135,9 @@ ${el.mensagem}
 setInterval(async () => {
     if (!idUser.value) return;
 
-    const response = await fetch("http://localhost:3000/notificacoes");
+    const response = await fetch(
+        "https://redesocial-phi.vercel.app/notificacoes"
+    );
     const data = await response.json();
 
     document.querySelectorAll(".nao-lidas").forEach((el) => {
@@ -160,7 +168,7 @@ setInterval(async () => {
             .map((el) => el.id);
 
         const response1 = await fetch(
-            `http://localhost:3000/ler?idmensagem=${idsMensagens}`
+            `https://redesocial-phi.vercel.app/ler?idmensagem=${idsMensagens}`
         );
         const data1 = await response.json();
     }
