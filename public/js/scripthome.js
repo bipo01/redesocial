@@ -130,7 +130,7 @@ ${el.mensagem}
 
                     `;
     });
-}, 50);
+}, 2000);
 
 setInterval(async () => {
     if (!idUser.value) return;
@@ -172,6 +172,6 @@ setInterval(async () => {
         );
         const data1 = await response.json();
     }
-}, 50);
+}, 2000);
 
 mensagens.scrollTop = mensagens.scrollHeight;
