@@ -34,16 +34,12 @@ btnCurtir.forEach((el) => {
 });
 
 async function curtir(n, i, c) {
-    try {
-        const response = await fetch(
-            `https://redesocial-phi.vercel.app/curtir?idpost=${i}&ac=${c}`
-        );
-        const curtidas = await response.json();
+    const response = await fetch(
+        `https://redesocial-phi.vercel.app/curtir?idpost=${i}&ac=${c}`
+    );
+    const curtidas = await response.json();
 
-        console.log(curtidas);
+    console.log(curtidas);
 
-        n.textContent = curtidas;
-    } catch (error) {
-        location.reload();
-    }
+    n.textContent = curtidas;
 }
