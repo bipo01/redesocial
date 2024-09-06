@@ -1,0 +1,96 @@
+<% if (minhasCurtidas.length > 0) { %> <% minhasCurtidas.forEach(function(el) {
+%>
+<input
+    type="hidden"
+    user_id="<%= el.user_id %>"
+    post_id="<%= el.post_id %>"
+    class="minhasCurtidas"
+/>
+<% }); %> <% } %>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand text-primary" href="#">Meu Site</a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div
+                class="d-flex w-100 justify-content-between align-items-center"
+            >
+                <ul id="ul-nav" class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/all-posts"
+                            >Página Inicial</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Perfil</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Dropdown
+                        </a>
+                        <ul
+                            class="dropdown-menu"
+                            aria-labelledby="navbarDropdown"
+                        >
+                            <li>
+                                <a class="dropdown-item" href="#">Action</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#"
+                                    >Another action</a
+                                >
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item" href="#"
+                                    >Something else here</a
+                                >
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <form
+                    id="buscar-amigo-form"
+                    action="/buscar-amigo"
+                    method="post"
+                    class="d-flex w-50"
+                >
+                    <input
+                        class="form-control me-2 w-250"
+                        type="search"
+                        name="searchFriend"
+                        placeholder="Encontre novos amigos"
+                        aria-label="Search"
+                    />
+                    <button class="btn btn-outline-primary" type="submit">
+                        Buscar
+                    </button>
+                </form>
+
+                <a id="sair-da-conta" href="/log-out">Sair da conta</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<button onclick="window.history.back();" class="btn-voltar btn btn-secondary">
+    Voltar
+</button>

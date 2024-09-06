@@ -1,0 +1,92 @@
+<% if (data.length > 0) { %>
+<div class="posts">
+    <% for( let i = 0; i < data.length; i++ ) { %>
+    <div id-post="<%= data[i].id %>" class="post card p-4 mb-3 shadow-sm">
+        <h3 class="text-dark"><%= data[i].titulo %></h3>
+        <p class="mb-1"><%= data[i].texto %></p>
+
+        <% if (data[i].imagem) { %>
+        <img
+            src="<%= data[i].imagem %>"
+            alt="Post Image"
+            style="max-width: 100%"
+        />
+        <% } %>
+
+        <small class="text-muted"
+            ><%= data[i].data.toLocaleDateString("pt-BR", { weekday: "long",
+            year: "numeric", month: "long", day: "numeric", }) %></small
+        >
+        <div class="user-curtida">
+            <em class="text-muted">@<%= data[i].user_name%></em>
+            <div class="num-curtidas">
+                <i class="bi bi-heart btnCurtir"></i>
+                <small numero-curtidas="<%= data[i].curtidas %>"
+                    ><%= data[i].curtidas %></small
+                >
+            </div>
+        </div>
+
+        <p class="comentarioP comentarios">Ver comentários</p>
+        <div
+            class="comentarios-container hidden"
+            id-post-comentario="<%=data[i].id%>"
+        >
+            <% if (comentarios.length > 0) { %> <% comentarios.forEach((el) => {
+            %> <% if(data[i].id === el.post_id) { %>
+
+            <div idComentario="<%= el.id %>" class="comentarioDiv">
+                <div class="pessoa-deletar">
+                    <p><%= el.user_nome %></p>
+                    <% if(el.user_id === usuario.id || data[i].user_id ===
+                    usuario.id) { %>
+                    <form
+                        class="deletar-comentario"
+                        action="/delete-comentario"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="idComentario"
+                            value="<%=el.id%>"
+                        />
+                        <button type="submit">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </form>
+                    <%}%>
+                </div>
+                <p><%= el.comentario %></p>
+            </div>
+
+            <%} %> <%}) %> <% } %>
+        </div>
+        <form id="comentario-form" action="/new-comentario" method="post">
+            <input
+                type="hidden"
+                name="idPostAtual"
+                id="idPostAtual"
+                value="<%=data[i].id%>"
+            />
+            <input type="hidden" name="nomeUser" value="<%= usuario.nome %>" />
+            <input
+                type="hidden"
+                name="usuarioUser"
+                value="<%= usuario.usuario %>"
+            />
+            <input
+                type="text"
+                name="comentario"
+                id="comentarioInput"
+                placeholder="Comentário"
+            />
+            <button type="submit">Adicionar</button>
+        </form>
+    </div>
+    <% } %>
+</div>
+<% } else { %>
+<div>
+    <h3 style="text-align: center">Nenhuma postagem...</h3>
+</div>
+<%}%>

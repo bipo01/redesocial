@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Rede Social</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        />
+        <link rel="stylesheet" href="homepage.css" />
+    </head>
+    <body class="bg-light text-dark">
+        <!-- Header Section -->
+        <header class="py-5 bg-primary text-light text-center">
+            <div class="container">
+                <h1 class="display-4">Bem-vindo à Sua Nova Rede Social</h1>
+                <p class="lead">
+                    Conecte-se com amigos, compartilhe suas histórias e explore
+                    novas oportunidades.
+                </p>
+                <div class="my-4">
+                    <a href="/register" class="btn btn-light btn-lg mx-2"
+                        >Criar Conta</a
+                    >
+                    <a href="/login" class="btn btn-outline-light btn-lg mx-2"
+                        >Login</a
+                    >
+                </div>
+            </div>
+        </header>
+
+        <!-- Features Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <i
+                                    class="bi bi-people-fill display-4 text-primary"
+                                ></i>
+                                <h5 class="card-title mt-3">
+                                    Encontre Novos Amigos
+                                </h5>
+                                <p class="card-text">
+                                    Explore perfis e faça novas conexões com
+                                    pessoas que compartilham seus interesses.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <i
+                                    class="bi bi-chat-left-text-fill display-4 text-primary"
+                                ></i>
+                                <h5 class="card-title mt-3">
+                                    Compartilhe Suas Histórias
+                                </h5>
+                                <p class="card-text">
+                                    Publique fotos, vídeos e atualizações para
+                                    manter seus amigos informados.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <i
+                                    class="bi bi-people display-4 text-primary"
+                                ></i>
+                                <h5 class="card-title mt-3">
+                                    Participe de Grupos
+                                </h5>
+                                <p class="card-text">
+                                    Junte-se a grupos de discussão para trocar
+                                    ideias sobre temas que você ama.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-5 bg-primary text-light">
+            <div class="container text-center">
+                <h2>O que Nossos Usuários Dizem</h2>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    "A melhor plataforma para se conectar com
+                                    amigos e familiares! Adoro a facilidade de
+                                    uso e as funcionalidades incríveis."
+                                </p>
+                                <footer class="blockquote-footer">
+                                    João Silva
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    "Uma excelente maneira de compartilhar
+                                    momentos especiais e ficar em contato com
+                                    aqueles que importam."
+                                </p>
+                                <footer class="blockquote-footer">
+                                    Maria Souza
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    "Grupos de discussão e comunidades que
+                                    realmente agregam valor. Adorei a
+                                    experiência!"
+                                </p>
+                                <footer class="blockquote-footer">
+                                    Carlos Oliveira
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="bg-dark text-light py-4">
+            <div class="container text-center">
+                <p>&copy; 2024 Rede Social. Todos os direitos reservados.</p>
+                <a href="/terms" class="text-light">Termos de Serviço</a> |
+                <a href="/privacy" class="text-light"
+                    >Política de Privacidade</a
+                >
+            </div>
+        </footer>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"
+        ></script>
+
+        <script>
+            const btnRegister = document.querySelector("#btnRegister");
+            const btnLogin = document.querySelector("#btnLogin");
+
+            btnLogin.addEventListener("click", () => {
+                window.location.href = "/login";
+            });
+            btnRegister.addEventListener("click", () => {
+                window.location.href = "/register";
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,118 @@
+<div class="container my-5">
+    <div class="row">
+        <!-- Seção principal -->
+        <div id="publicacoes" class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">Publicações</h2>
+                <button id="show-add-post-btn" class="btn btn-primary">
+                    Nova publicação
+                </button>
+            </div>
+
+            <form
+                enctype="multipart/form-data"
+                id="add-post-form"
+                class="hidden card p-4 mb-4 shadow-sm"
+                action="/add-post"
+                method="post"
+            >
+                <div class="mb-3">
+                    <input
+                        type="text"
+                        name="titulo"
+                        id="titulo"
+                        class="form-control"
+                        placeholder="Título"
+                        required
+                    />
+                </div>
+                <div class="mb-3">
+                    <textarea
+                        name="texto"
+                        id="texto"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Publique algo"
+                        required
+                    ></textarea>
+                </div>
+                <div class="mb-3">
+                    <input
+                        type="file"
+                        name="image"
+                        id="image"
+                        accept="image/*"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    Adicionar publicação
+                </button>
+            </form>
+
+            <input type="hidden" id="idUser" value="<%= usuario.id %>" />
+
+            <%- include("./post.ejs") %>
+        </div>
+
+        <div class="enviarMensagemDiv hidden col-lg-8">
+            <form
+                class="card"
+                id="enviarMensagem"
+                action="/enviar-mensagem"
+                method="post"
+            >
+                <div class="card-body">
+                    <div mensagem-id-amigo="" class="mensagens mb-3"></div>
+                    <input type="hidden" name="idAmigo" id="idAmigo" value="" />
+                    <input
+                        type="hidden"
+                        name="nomeAmigo"
+                        id="nomeAmigo"
+                        value=""
+                    />
+                    <textarea
+                        class="form-control mb-2"
+                        name="mensagem"
+                        id="mensagem"
+                        placeholder="Digite algo"
+                        rows="2"
+                    ></textarea>
+                    <button type="submit" class="btn btn-primary">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Div lateral para mensagens de amigos -->
+        <div class="col-lg-4">
+            <div class="card p-4 shadow-sm">
+                <h4 id="mensagem-amigos-h4" class="text-primary">
+                    Caixa de Mensagens
+                </h4>
+
+                <div id="friend-messages">
+                    <% if (data1.length > 0) { %> <% for( let i = 0; i <
+                    data1.length; i++ ) { %>
+                    <div
+                        id-amigo="<%=data1[i].amigo_id%>"
+                        class="amigo-mensagem btnUsuarios"
+                    >
+                        <h5
+                            id-amigo-not="<%=data1[i].amigo_id%>"
+                            class="nao-lidas"
+                        ></h5>
+
+                        <h3><%= data1[i].nome_amigo %></h3>
+
+                        <p
+                            id-amigo-p="<%=data1[i].amigo_id%>"
+                            class="last-message"
+                        ></p>
+                    </div>
+                    <% } %> <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

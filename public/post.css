@@ -1,0 +1,147 @@
+/* CSS Geral */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Estilização dos Posts */
+.posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 1rem;
+}
+
+.post {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s ease;
+}
+
+.post:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.post img {
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.user-curtida {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.num-curtidas {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btnCurtir {
+    cursor: pointer;
+    color: #007bff;
+    font-size: 1.2rem;
+}
+
+.btnCurtir:hover {
+    color: #0056b3;
+}
+
+.comentarioP {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.comentarios-container {
+    margin-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.comentarioDiv {
+    background-color: #f1f3f5;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comentarioDiv p {
+    margin: 0;
+}
+
+.deletar-comentario button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #dc3545;
+    font-size: 1.2rem;
+}
+
+.deletar-comentario button:hover {
+    color: #c82333;
+}
+
+form#comentario-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+form#comentario-form input[type="text"] {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+}
+
+form#comentario-form button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+form#comentario-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para a mensagem de "Nenhuma postagem" */
+h3 {
+    color: #6c757d;
+}
+
+.pessoa-deletar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 0.1px solid gray;
+    outline: none;
+}

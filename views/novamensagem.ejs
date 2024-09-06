@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mensagem</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="novamensagem.css" />
+    </head>
+    <body>
+        <div class="container py-4">
+            <form id="pegarMensagens" action="/pegar-mensagens" method="post">
+                <input type="hidden" name="idAmigo" id="idAmigoP" value="" />
+            </form>
+            <% if (data.length > 0) { %>
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <% for (let i = 0; i < data.length; i++) { %>
+                    <div
+                        class="card mb-2 btnUsuarios"
+                        id-amigo="<%= data[i].amigo_id %>"
+                    >
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= data[i].nome_amigo %>
+                            </h5>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+
+                <div class="col-lg-8">
+                    <form
+                        class="hidden card"
+                        id="enviarMensagem"
+                        action="/enviar-mensagem"
+                        method="post"
+                    >
+                        <div class="card-body">
+                            <div class="mensagens mb-3"></div>
+                            <input
+                                type="hidden"
+                                name="idAmigo"
+                                id="idAmigo"
+                                value=""
+                            />
+                            <input
+                                type="hidden"
+                                name="nomeAmigo"
+                                id="nomeAmigo"
+                                value=""
+                            />
+                            <textarea
+                                class="form-control mb-2"
+                                name="mensagem"
+                                id="mensagem"
+                                placeholder="Digite algo"
+                                rows="2"
+                            ></textarea>
+                            <button type="submit" class="btn btn-primary">
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <script>
+            const enviarMensagemForm =
+                document.querySelector("#enviarMensagem");
+            const pegarMensagensForm =
+                document.querySelector("#pegarMensagens");
+
+            const btnUsuarios = document.querySelectorAll(".btnUsuarios");
+            const mensagens = document.querySelector(".mensagens");
+
+            const mensagem = document.querySelector("#mensagem");
+            const idAmigoInp = document.querySelector("#idAmigo");
+
+            let dataAtual;
+
+            btnUsuarios.forEach((el) => {
+                el.addEventListener("click", async (e) => {
+                    const idAmigo = el.getAttribute("id-amigo");
+                    const nomeAmigo = el.textContent;
+                    document.querySelector("#idAmigo").value = idAmigo;
+                    document.querySelector("#idAmigoP").value = idAmigo;
+
+                    document.querySelector("#nomeAmigo").value = nomeAmigo;
+
+                    const formData = new FormData(pegarMensagensForm);
+                    const urlParams = new URLSearchParams(formData);
+
+                    const response = await fetch(
+                        "http://localhost:3000/pegar-mensagens",
+                        { method: "post", body: urlParams }
+                    );
+                    const data = await response.json();
+
+                    mensagens.innerHTML = "";
+
+                    dataAtual = data;
+
+                    data.forEach((el) => {
+                        el.mensagem = el.mensagem.replaceAll("\n", "<br>");
+                        const html = `<p class='${el.status}'>${el.mensagem}</p>`;
+                        mensagens.insertAdjacentHTML("afterbegin", html);
+                    });
+
+                    if (el.classList.contains("selected")) {
+                        enviarMensagemForm.classList.toggle("hidden");
+                    } else {
+                        enviarMensagemForm.classList.remove("hidden");
+                    }
+
+                    btnUsuarios.forEach((el) =>
+                        el.classList.remove("selected")
+                    );
+                    el.classList.add("selected");
+                });
+            });
+
+            enviarMensagemForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(enviarMensagemForm);
+                const urlParams = new URLSearchParams(formData);
+
+                const response = await fetch(
+                    "http://localhost:3000/enviar-mensagem",
+                    {
+                        method: "post",
+                        body: urlParams,
+                    }
+                );
+
+                const data = await response.json();
+                mensagens.innerHTML = "";
+                mensagem.value = "";
+
+                data.forEach((el) => {
+                    const html = `<p class='${el.status}'>${el.mensagem}</p>`;
+                    mensagens.insertAdjacentHTML("afterbegin", html);
+                });
+            });
+
+            setInterval(async () => {
+                if (!idAmigoInp.value) return;
+
+                const formData = new FormData(enviarMensagemForm);
+                const urlParams = new URLSearchParams(formData);
+
+                const response = await fetch(
+                    "http://localhost:3000/pegar-mensagens-tempo-real",
+                    {
+                        method: "post",
+                        body: urlParams,
+                    }
+                );
+
+                const data = await response.json();
+
+                if (dataAtual != data) {
+                    mensagens.innerHTML = "";
+
+                    data.forEach((el) => {
+                        el.mensagem = el.mensagem.replaceAll("\n", "<br>");
+                        const html = `<p class='${el.status}'>${el.mensagem}</p>`;
+                        mensagens.insertAdjacentHTML("afterbegin", html);
+                    });
+                }
+            }, 50);
+        </script>
+    </body>
+</html>

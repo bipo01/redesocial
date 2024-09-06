@@ -1,0 +1,61 @@
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa; /* Fundo claro */
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #0056b3; /* Azul */
+}
+
+.card-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d; /* Cor cinza para subtítulo */
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #004080;
+    transform: scale(1.05);
+}
+
+.alert-info {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 20px;
+}
+.btn-voltar {
+    position: fixed;
+    bottom: 30px; /* Ajuste a distância da parte inferior conforme necessário */
+    right: 30px; /* Ajuste a distância da parte direita conforme necessário */
+    z-index: 1000; /* Garante que o botão fique acima de outros elementos */
+    border-radius: 50px; /* Botão redondo */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave */
+}
+
+.btn-voltar:hover {
+    background-color: #007bff; /* Cor de fundo ao passar o mouse */
+    color: #fff; /* Cor do texto ao passar o mouse */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Aumenta a sombra ao passar o mouse */
+}
+
+.btn-voltar i {
+    margin-right: 8px; /* Espaço entre o ícone e o texto */
+}

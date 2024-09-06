@@ -1,0 +1,93 @@
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f0f4f8; /* Fundo claro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.card {
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btnUsuarios {
+    cursor: pointer;
+    text-align: center;
+    padding: 0.3rem;
+    transition: background-color 0.3s ease;
+}
+
+.btnUsuarios:hover {
+    background-color: #e9ecef;
+}
+
+.selected {
+    background: gainsboro;
+}
+
+.mensagens {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+textarea {
+    resize: none;
+}
+
+.enviada {
+    background: green;
+    padding: 0.4rem 1rem;
+    float: right;
+    color: white;
+    width: fit-content;
+    max-width: 70%;
+    clear: both;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.recebida {
+    background: blue;
+    color: white;
+    width: fit-content;
+    max-width: 70%;
+    float: left;
+    clear: both;
+    padding: 0.4rem 1rem;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.mensagens {
+    min-height: 60vh;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 992px) {
+    .row {
+        flex-direction: column;
+    }
+    .col-lg-8,
+    .col-lg-4 {
+        max-width: 100%;
+    }
+}
