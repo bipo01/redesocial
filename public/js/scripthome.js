@@ -130,7 +130,7 @@ ${el.mensagem}
 
                     `;
     });
-}, 2000);
+}, 100);
 
 setInterval(async () => {
     if (!idUser.value) return;
@@ -170,8 +170,8 @@ setInterval(async () => {
         const response1 = await fetch(
             `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
         );
-        const data1 = await response.json();
+        const data1 = await response1.json();
     }
-}, 2000);
+}, 100);
 
 mensagens.scrollTop = mensagens.scrollHeight;
