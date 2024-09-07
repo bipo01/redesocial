@@ -1,4 +1,4 @@
-<% if (minhasCurtidas.length > 0) { %> <% minhasCurtidas.forEach(function(el) {
+<% if (minhasCurtidas?.length > 0) { %> <% minhasCurtidas.forEach(function(el) {
 %>
 <input
     type="hidden"
@@ -28,18 +28,12 @@
             >
                 <ul id="ul-nav" class="navbar-nav">
                     <li class="nav-item">
-                        <a
-                            class="nav-link active"
-                            href="https://redesocial-phi.vercel.app/all-posts"
+                        <a class="nav-link active" href="/all-posts"
                             >Página Inicial</a
                         >
                     </li>
                     <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="https://redesocial-phi.vercel.app/home"
-                            >Perfil</a
-                        >
+                        <a class="nav-link" href="/home">Perfil</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a
@@ -76,7 +70,7 @@
 
                 <form
                     id="buscar-amigo-form"
-                    action="https://redesocial-phi.vercel.app/buscar-amigo"
+                    action="/buscar-amigo"
                     method="post"
                     class="d-flex w-50"
                 >
@@ -92,11 +86,7 @@
                     </button>
                 </form>
 
-                <a
-                    id="sair-da-conta"
-                    href="https://redesocial-phi.vercel.app/log-out"
-                    >Sair da conta</a
-                >
+                <a id="sair-da-conta" href="/log-out">Sair da conta</a>
             </div>
         </div>
     </div>

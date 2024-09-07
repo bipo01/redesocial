@@ -31,7 +31,7 @@
         </button>
         <div class="container my-5">
             <h1 class="mb-4">Resultados para: "<%= search %>"</h1>
-            <% if (data.length > 0) { %> <% data.forEach((amigo) => { %>
+            <% if (data?.length > 0) { %> <% data.forEach((amigo) => { %>
             <div class="card mb-3">
                 <div class="card-body">
                     <h2 class="card-title"><%= amigo.usuario %></h2>
@@ -41,7 +41,7 @@
                     <form
                         id="formAddAmigo-<%= amigo.id %>"
                         class="d-inline"
-                        action="https://redesocial-phi.vercel.app/add-amigo"
+                        action="/add-amigo"
                         method="post"
                     >
                         <input
