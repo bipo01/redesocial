@@ -12,7 +12,7 @@ comentarioForm.forEach((el, i) => {
         const urlParams = new URLSearchParams(formData);
 
         const response = await fetch(
-            "https://redesocial-phi.vercel.app/new-comentario",
+            "https://redesocial-d5bx.onrender.com/new-comentario",
             {
                 method: "post",
                 body: urlParams,
@@ -92,7 +92,7 @@ function deletarComentario(el) {
     const formData = new FormData(el);
     const urlParams = new URLSearchParams(formData);
 
-    fetch("https://redesocial-phi.vercel.app/delete-comentario", {
+    fetch("https://redesocial-d5bx.onrender.com/delete-comentario", {
         method: "post",
         body: urlParams,
     });
