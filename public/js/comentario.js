@@ -11,16 +11,39 @@ comentarioForm.forEach((el, i) => {
         const formData = new FormData(comentarioForm[i]);
         const urlParams = new URLSearchParams(formData);
 
-        const response = await fetch(
-            "https://redesocial-d5bx.onrender.com/new-comentario",
-            {
-                method: "post",
-                body: urlParams,
-            }
-        );
-        const data = await response.json();
+        fetch("https://redesocial-d5bx.onrender.com/new-comentario", {
+            method: "post",
+            body: urlParams,
+        });
 
-        console.log(data);
+        const html = `
+        <div idComentario="${el.children[0].value}" class="comentarioDiv">
+            <div class="pessoa-deletar">
+                <p>${el.children[1].value}</p>
+               
+                <form
+                    class="deletar-comentario"
+                    action="/delete-comentario"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="idComentario"
+                        value="${el.children[0].value}"
+                    />
+                    <button type="submit">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                </form>
+              
+            </div>
+            <p>${el.children[3].value}</p>
+        </div>
+        `;
+
+        containerAtual.insertAdjacentHTML("afterbegin", html);
+
+        el.children[3].value = "";
 
         const idPostAtual = Number(e.target.children[0].value);
         console.log(idPostAtual);
@@ -28,35 +51,6 @@ comentarioForm.forEach((el, i) => {
         const containerAtual = document.querySelector(
             `[id-post-comentario='${idPostAtual}']`
         );
-
-        data.forEach((el) => {
-            const html = `
-            <div idComentario="${el.id}" class="comentarioDiv">
-                <div class="pessoa-deletar">
-                    <p>${el.user_nome}</p>
-                   
-                    <form
-                        class="deletar-comentario"
-                        action="/delete-comentario"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="idComentario"
-                            value="${el.id}"
-                        />
-                        <button type="submit">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
-                    </form>
-                  
-                </div>
-                <p>${el.comentario}</p>
-            </div>
-            `;
-
-            containerAtual.insertAdjacentHTML("afterbegin", html);
-        });
 
         if (el.parentElement.children[6].children.length > 0) {
             if (
@@ -69,8 +63,6 @@ comentarioForm.forEach((el, i) => {
                 });
             }
         }
-
-        el.children[3].value = "";
 
         document.querySelectorAll(".deletar-comentario").forEach((el, i) => {
             el.addEventListener("submit", (e) => {
