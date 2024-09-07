@@ -16,6 +16,13 @@ comentarioForm.forEach((el, i) => {
             body: urlParams,
         });
 
+        const idPostAtual = Number(e.target.children[0].value);
+        console.log(idPostAtual);
+
+        const containerAtual = document.querySelector(
+            `[id-post-comentario='${idPostAtual}']`
+        );
+
         const html = `
         <div idComentario="${el.children[0].value}" class="comentarioDiv">
             <div class="pessoa-deletar">
@@ -44,13 +51,6 @@ comentarioForm.forEach((el, i) => {
         containerAtual.insertAdjacentHTML("afterbegin", html);
 
         el.children[3].value = "";
-
-        const idPostAtual = Number(e.target.children[0].value);
-        console.log(idPostAtual);
-
-        const containerAtual = document.querySelector(
-            `[id-post-comentario='${idPostAtual}']`
-        );
 
         if (el.parentElement.children[6].children.length > 0) {
             if (
