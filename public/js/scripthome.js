@@ -39,7 +39,7 @@ btnUsuarios.forEach((el) => {
         const urlParams = new URLSearchParams(formData);
 
         const response = await fetch(
-            "https://redesocial-phi.vercel.app/pegar-mensagens",
+            "https://redesocial-d5bx.onrender.com/pegar-mensagens",
             {
                 method: "post",
                 body: urlParams,
@@ -81,7 +81,7 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     const urlParams = new URLSearchParams(formData);
 
     const response = await fetch(
-        "https://redesocial-phi.vercel.app/enviar-mensagem",
+        "https://redesocial-d5bx.onrender.com/enviar-mensagem",
         {
             method: "post",
             body: urlParams,
@@ -96,7 +96,7 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
 setInterval(async () => {
     if (!idUser.value) return;
     const response = await fetch(
-        `https://redesocial-phi.vercel.app/pegar-mensagens-tempo-real`
+        `https://redesocial-d5bx.onrender.com/pegar-mensagens-tempo-real`
     );
 
     const allData = await response.json();
@@ -136,7 +136,7 @@ setInterval(async () => {
     if (!idUser.value) return;
 
     const response = await fetch(
-        "https://redesocial-phi.vercel.app/notificacoes"
+        "https://redesocial-d5bx.onrender.com/notificacoes"
     );
     const data = await response.json();
 
@@ -168,7 +168,7 @@ setInterval(async () => {
             .map((el) => el.id);
 
         const response1 = await fetch(
-            `https://redesocial-phi.vercel.app/ler?idmensagem=${idsMensagens}`
+            `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
         );
         const data1 = await response.json();
     }

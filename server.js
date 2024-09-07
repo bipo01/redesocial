@@ -19,7 +19,21 @@ const db = new pg.Client({
 });
 db.connect();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "*", // Permitir todas as origens (use com cuidado)
+        methods: ["GET", "POST", "PUT", "DELETE"], // Definir os métodos permitidos
+        credentials: true, // Habilitar cookies/sessões em pedidos CORS
+    })
+);
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Permitir todas as origens
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
