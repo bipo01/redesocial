@@ -17,7 +17,6 @@ comentarioForm.forEach((el, i) => {
         });
 
         const idPostAtual = Number(e.target.children[0].value);
-        console.log(idPostAtual);
 
         const containerAtual = document.querySelector(
             `[id-post-comentario='${idPostAtual}']`
@@ -118,7 +117,6 @@ document.querySelectorAll(".comentarios").forEach((el) => {
 });
 
 function comentario(el) {
-    console.log(el);
     el.textContent =
         el.textContent === "Ver comentários"
             ? "Ocultar comentários"

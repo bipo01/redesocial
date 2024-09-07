@@ -4,6 +4,8 @@ import pg from "pg";
 import cors from "cors";
 import session from "express-session";
 import multer from "multer";
+import http from "http"; // Adicione esta linha
+import { Server } from "socket.io"; // Adicione esta linha
 
 import { fileURLToPath } from "url";
 import path from "path";
@@ -18,6 +20,9 @@ const db = new pg.Client({
         "postgres://default:Ef7gRnhwbD9B@ep-bold-limit-a48ldweb.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
 });
 db.connect();
+
+const server = http.createServer(app); // Altere isso para suportar o socket.io
+const io = new Server(server); // Crie o servidor socket.io
 
 app.use(
     cors({
@@ -67,6 +72,28 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
+});
+
+io.on("connection", (socket) => {
+    socket.on("sendMessage", async (data) => {
+        console.log(data);
+        const idAmigo = Number(data.idAmigo);
+        const idUser = Number(data.idUser);
+
+        const result = await db.query(
+            "SELECT * FROM redesocialmensagens WHERE amigo_id = $1 AND user_id = $2 ORDER BY id ASC",
+            [idAmigo, idUser]
+        );
+        const mensagem = result.rows;
+
+        const result1 = await db.query(
+            "SELECT * FROM redesocialmensagens WHERE amigo_id = $1 AND user_id = $2 ORDER BY id ASC",
+            [idUser, idAmigo]
+        );
+        const mensagem1 = result1.rows;
+
+        io.emit("receivedMessage", { idUser, idAmigo, mensagem, mensagem1 });
+    });
 });
 
 app.get("/", (req, res) => {
@@ -191,6 +218,7 @@ app.get("/all-posts", async (req, res) => {
 
 app.get("/nova-mensagem", async (req, res) => {
     if (!req.session.user) return res.redirect("/login");
+
     const result = await db.query(
         "SELECT * FROM redesocialamigos WHERE user_id = $1",
         [req.session.user.id]
@@ -356,13 +384,7 @@ app.post("/enviar-mensagem", async (req, res) => {
         ]
     );
 
-    const result = await db.query(
-        "SELECT * FROM redesocialmensagens WHERE amigo_id = $1 AND user_id = $2 ORDER BY id ASC",
-        [idAmigo, req.session.user.id]
-    );
-    const data = result.rows;
-
-    res.json(data);
+    res.json("Adicionado");
 });
 
 app.post("/pegar-mensagens", async (req, res) => {
@@ -505,6 +527,6 @@ app.get("/log-out", (req, res) => {
     });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server on port ${port}`);
 });

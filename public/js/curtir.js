@@ -7,7 +7,6 @@ document.querySelectorAll(".minhasCurtidas").forEach((el) => {
 
         if (idPost === post_id) {
             const coracao = post.children[4].children[1].children[0];
-            console.log(coracao);
             coracao.classList.remove("bi-heart");
             coracao.classList.add("bi-heart-fill");
         }
@@ -38,8 +37,6 @@ async function curtir(n, i, c) {
         `https://redesocial-d5bx.onrender.com/curtir?idpost=${i}&ac=${c}`
     );
     const curtidas = await response.json();
-
-    console.log(curtidas);
 
     n.textContent = curtidas;
 }

@@ -16,7 +16,35 @@ const idUser = document.querySelector("#idUser");
 const nomeUser = document.querySelector("#nomeUser");
 const usuarioUser = document.querySelector("#usuarioUser");
 
+const socket = io();
+
 let dataAtual;
+
+socket.on("receivedMessage", (mensagem) => {
+    console.log(`ID USER: ${idUser.value}  ||  (${mensagem})`);
+    mensagens.innerHTML = "";
+    if (idUser.value == mensagem.idUser) {
+        mensagem.mensagem.forEach((el) => {
+            el.mensagem = el.mensagem.replaceAll("\n", "<br>");
+            const html = `
+                            <p class='${el.status}'>
+                                ${el.mensagem}
+                                <small id="hora">${el.hora}</small>
+                            </p>`;
+            mensagens.insertAdjacentHTML("afterbegin", html);
+        });
+    } else {
+        mensagem.mensagem1.forEach((el) => {
+            el.mensagem = el.mensagem.replaceAll("\n", "<br>");
+            const html = `
+                            <p class='${el.status}'>
+                                ${el.mensagem}
+                                <small id="hora">${el.hora}</small>
+                            </p>`;
+            mensagens.insertAdjacentHTML("afterbegin", html);
+        });
+    }
+});
 
 showAddPostBtn.addEventListener("click", () => {
     addPostForm.classList.toggle("hidden");
@@ -28,7 +56,7 @@ showAddPostBtn.addEventListener("click", () => {
 btnUsuarios.forEach((el) => {
     el.addEventListener("click", async (e) => {
         const idAmigo = el.getAttribute("id-amigo");
-        const nomeAmigo = el.children[0].textContent;
+        const nomeAmigo = el.children[1].textContent;
 
         document.querySelector("#idAmigoP").value = idAmigo;
         document.querySelector("#idAmigo").value = idAmigo;
@@ -38,13 +66,10 @@ btnUsuarios.forEach((el) => {
         const formData = new FormData(pegarMensagensForm);
         const urlParams = new URLSearchParams(formData);
 
-        const response = await fetch(
-            "https://redesocial-d5bx.onrender.com/pegar-mensagens",
-            {
-                method: "post",
-                body: urlParams,
-            }
-        );
+        const response = await fetch("http://localhost:3000/pegar-mensagens", {
+            method: "post",
+            body: urlParams,
+        });
         const data = await response.json();
 
         mensagens.innerHTML = "";
@@ -79,99 +104,98 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(enviarMensagemForm);
     const urlParams = new URLSearchParams(formData);
+    const idAmigo = enviarMensagemForm.children[0].children[1].value;
 
-    const response = await fetch(
-        "https://redesocial-d5bx.onrender.com/enviar-mensagem",
-        {
-            method: "post",
-            body: urlParams,
-        }
-    );
+    const response = await fetch("http://localhost:3000/enviar-mensagem", {
+        method: "post",
+        body: urlParams,
+    });
 
-    const data = await response.json();
-    mensagens.innerHTML = "";
+    socket.emit("sendMessage", { idAmigo, idUser: idUser.value });
+
+    //const data = await response.json();
+
     mensagem.value = "";
 });
 
-setInterval(async () => {
-    if (!idUser.value) return;
-    const response = await fetch(
-        `https://redesocial-d5bx.onrender.com/pegar-mensagens-tempo-real`
-    );
+// setInterval(async () => {
+//     if (!idUser.value) return;
 
-    const allData = await response.json();
+//     const response = await fetch(
+//         `http://localhost:3000/pegar-mensagens-tempo-real`
+//     );
 
-    const { data0: data, data1, data2 } = allData;
+//     const allData = await response.json();
 
-    mensagens.innerHTML = "";
+//     const { data0: data, data1, data2 } = allData;
 
-    data.forEach((el) => {
-        mensagens.setAttribute("mensagem-id-amigo", idAmigoInp.value);
-        const mensagemIdAmigo = mensagens.getAttribute("mensagem-id-amigo");
+//     mensagens.innerHTML = "";
 
-        if (mensagemIdAmigo == el.amigo_id) {
-            el.mensagem = el.mensagem.replaceAll("\n", "<br>");
-            const html = `
-                        <p class='${el.status}'>
-                            ${el.mensagem} 
-                            <small id="hora">${el.hora}</small>
-                        </p>`;
-            mensagens.insertAdjacentHTML("afterbegin", html);
-        }
-    });
+//     data.forEach((el) => {
+//         mensagens.setAttribute("mensagem-id-amigo", idAmigoInp.value);
+//         const mensagemIdAmigo = mensagens.getAttribute("mensagem-id-amigo");
 
-    data2.forEach((el) => {
-        let p = document.querySelector(`[id-amigo-p="${el.amigo_id}"]`);
+//         if (mensagemIdAmigo == el.amigo_id) {
+//             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
+//             const html = `
+//                         <p class='${el.status}'>
+//                             ${el.mensagem}
+//                             <small id="hora">${el.hora}</small>
+//                         </p>`;
+//             mensagens.insertAdjacentHTML("afterbegin", html);
+//         }
+//     });
 
-        p.innerHTML = `
-                    
-<small>${el.status === "enviada" ? el.nome_user : el.nome_amigo}:</small>
-${el.mensagem} 
+//     data2.forEach((el) => {
+//         let p = document.querySelector(`[id-amigo-p="${el.amigo_id}"]`);
 
-                    `;
-    });
-}, 100);
+//         p.innerHTML = `
 
-setInterval(async () => {
-    if (!idUser.value) return;
+// <small>${el.status === "enviada" ? el.nome_user : el.nome_amigo}:</small>
+// ${el.mensagem}
 
-    const response = await fetch(
-        "https://redesocial-d5bx.onrender.com/notificacoes"
-    );
-    const data = await response.json();
+//                     `;
+//     });
+// }, 100);
 
-    document.querySelectorAll(".nao-lidas").forEach((el) => {
-        const text = el.textContent;
-        const idAmigo = el.getAttribute("id-amigo-not");
+// setInterval(async () => {
+//     if (!idUser.value) return;
 
-        const notificacoes = data.filter((el) => el.amigo_id == idAmigo).length;
+//     const response = await fetch("http://localhost:3000/notificacoes");
+//     const data = await response.json();
 
-        if (notificacoes != text) {
-            el.textContent = notificacoes;
-        }
+//     document.querySelectorAll(".nao-lidas").forEach((el) => {
+//         const text = el.textContent;
+//         const idAmigo = el.getAttribute("id-amigo-not");
 
-        if (el.textContent > 0) {
-            el.classList.add("nao-lidas-style");
-        }
-        if (el.textContent == 0 || !el.textContent) {
-            el.classList.remove("nao-lidas-style");
-            el.textContent = "";
-        }
-    });
+//         const notificacoes = data.filter((el) => el.amigo_id == idAmigo).length;
 
-    const selecionado = document.querySelector(".selected");
-    if (selecionado) {
-        const idAmigoSelecionado = selecionado.getAttribute("id-amigo");
+//         if (notificacoes != text) {
+//             el.textContent = notificacoes;
+//         }
 
-        const idsMensagens = data
-            .filter((el) => el.amigo_id == idAmigoSelecionado)
-            .map((el) => el.id);
+//         if (el.textContent > 0) {
+//             el.classList.add("nao-lidas-style");
+//         }
+//         if (el.textContent == 0 || !el.textContent) {
+//             el.classList.remove("nao-lidas-style");
+//             el.textContent = "";
+//         }
+//     });
 
-        const response1 = await fetch(
-            `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
-        );
-        const data1 = await response1.json();
-    }
-}, 100);
+//     const selecionado = document.querySelector(".selected");
+//     if (selecionado) {
+//         const idAmigoSelecionado = selecionado.getAttribute("id-amigo");
+
+//         const idsMensagens = data
+//             .filter((el) => el.amigo_id == idAmigoSelecionado)
+//             .map((el) => el.id);
+
+//         const response1 = await fetch(
+//             `http://localhost:3000/ler?idmensagem=${idsMensagens}`
+//         );
+//         const data1 = await response1.json();
+//     }
+// }, 100);
 
 mensagens.scrollTop = mensagens.scrollHeight;
