@@ -59,6 +59,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+    if (req.session.user) {
+        return res.redirect("/home");
+    }
     return res.render("login.ejs", {
         wrongUser: req.session.wrongUser,
         wrongPass: req.session.wrongPass,
