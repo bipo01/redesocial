@@ -128,7 +128,7 @@ btnUsuarios.forEach((el) => {
 
         data.forEach((el) => {
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
-            const html = `<p class='${el.status}'>${el.mensagem}</p>`;
+            const html = `<p class='${el.status}'>${el.mensagem}<small id="hora">${el.hora}</small></p>`;
             mensagens.insertAdjacentHTML("afterbegin", html);
         });
 
