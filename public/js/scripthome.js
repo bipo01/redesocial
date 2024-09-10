@@ -21,9 +21,49 @@ const socket = io();
 let dataAtual;
 
 socket.on("receivedMessage", (mensagem) => {
-    console.log(`ID USER: ${idUser.value}  ||  (${mensagem})`);
-    mensagens.innerHTML = "";
     if (idUser.value == mensagem.idUser) {
+        const idAmigoLastMessage = document.querySelector(
+            `[id-amigo-p='${mensagem.idAmigo}']`
+        );
+        idAmigoLastMessage.innerHTML = `<small>Você: ${
+            mensagem.mensagem.at(-1).mensagem
+        }</small>`;
+    } else if (idUser.value == mensagem.idAmigo) {
+        const idAmigoLastMessage = document.querySelector(
+            `[id-amigo-p='${mensagem.idUser}']`
+        );
+
+        idAmigoLastMessage.innerHTML = `<small>${
+            mensagem.mensagem1.at(-1).nome_amigo
+        }: ${mensagem.mensagem1.at(-1).mensagem}</small>`;
+
+        const notificacoes = mensagem.mensagem1.filter(
+            (el) => el.lida == "nao"
+        ).length;
+
+        console.log(notificacoes);
+
+        const notificacao = document.querySelector(
+            `[id-amigo-not='${mensagem.idUser}']`
+        );
+        const idAmigoC = document.querySelector(
+            `[id-amigo='${mensagem.idUser}']`
+        );
+
+        if (!idAmigoC.classList.contains("selected")) {
+            notificacao.textContent = notificacoes;
+            notificacao.classList.add("nao-lidas-style");
+        } else {
+            const idsMensagens = mensagem.mensagem1.map((el) => el.id);
+            console.log(idsMensagens);
+            fetch(`http://localhost:3000/ler?idmensagem=${idsMensagens}`);
+        }
+    }
+
+    const idAmigoInput = document.querySelector("#idAmigo").value;
+
+    if (idUser.value == mensagem.idUser && idAmigoInput == mensagem.idAmigo) {
+        mensagens.innerHTML = "";
         mensagem.mensagem.forEach((el) => {
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
             const html = `
@@ -33,7 +73,12 @@ socket.on("receivedMessage", (mensagem) => {
                             </p>`;
             mensagens.insertAdjacentHTML("afterbegin", html);
         });
-    } else {
+    } else if (
+        idUser.value == mensagem.idAmigo &&
+        idAmigoInput == mensagem.idUser
+    ) {
+        mensagens.innerHTML = "";
+
         mensagem.mensagem1.forEach((el) => {
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
             const html = `
@@ -82,6 +127,17 @@ btnUsuarios.forEach((el) => {
             mensagens.insertAdjacentHTML("afterbegin", html);
         });
 
+        document.querySelector(`[id-amigo-not='${idAmigo}']`).innerHTML = "";
+        document
+            .querySelector(`[id-amigo-not='${idAmigo}']`)
+            .classList.remove("nao-lidas-style");
+
+        const idsMensagens = data
+            .filter((el) => el.amigo_id == idAmigo)
+            .map((el) => el.id);
+
+        fetch(`http://localhost:3000/ler?idmensagem=${idsMensagens}`);
+
         btnUsuarios.forEach((el1) => {
             if (el1 !== el) {
                 el1.classList.remove("selected");
@@ -111,91 +167,13 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
         body: urlParams,
     });
 
-    socket.emit("sendMessage", { idAmigo, idUser: idUser.value });
-
-    //const data = await response.json();
+    socket.emit("sendMessage", {
+        idAmigo,
+        idUser: idUser.value,
+        mensagem: mensagem.value,
+    });
 
     mensagem.value = "";
 });
-
-// setInterval(async () => {
-//     if (!idUser.value) return;
-
-//     const response = await fetch(
-//         `http://localhost:3000/pegar-mensagens-tempo-real`
-//     );
-
-//     const allData = await response.json();
-
-//     const { data0: data, data1, data2 } = allData;
-
-//     mensagens.innerHTML = "";
-
-//     data.forEach((el) => {
-//         mensagens.setAttribute("mensagem-id-amigo", idAmigoInp.value);
-//         const mensagemIdAmigo = mensagens.getAttribute("mensagem-id-amigo");
-
-//         if (mensagemIdAmigo == el.amigo_id) {
-//             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
-//             const html = `
-//                         <p class='${el.status}'>
-//                             ${el.mensagem}
-//                             <small id="hora">${el.hora}</small>
-//                         </p>`;
-//             mensagens.insertAdjacentHTML("afterbegin", html);
-//         }
-//     });
-
-//     data2.forEach((el) => {
-//         let p = document.querySelector(`[id-amigo-p="${el.amigo_id}"]`);
-
-//         p.innerHTML = `
-
-// <small>${el.status === "enviada" ? el.nome_user : el.nome_amigo}:</small>
-// ${el.mensagem}
-
-//                     `;
-//     });
-// }, 100);
-
-// setInterval(async () => {
-//     if (!idUser.value) return;
-
-//     const response = await fetch("http://localhost:3000/notificacoes");
-//     const data = await response.json();
-
-//     document.querySelectorAll(".nao-lidas").forEach((el) => {
-//         const text = el.textContent;
-//         const idAmigo = el.getAttribute("id-amigo-not");
-
-//         const notificacoes = data.filter((el) => el.amigo_id == idAmigo).length;
-
-//         if (notificacoes != text) {
-//             el.textContent = notificacoes;
-//         }
-
-//         if (el.textContent > 0) {
-//             el.classList.add("nao-lidas-style");
-//         }
-//         if (el.textContent == 0 || !el.textContent) {
-//             el.classList.remove("nao-lidas-style");
-//             el.textContent = "";
-//         }
-//     });
-
-//     const selecionado = document.querySelector(".selected");
-//     if (selecionado) {
-//         const idAmigoSelecionado = selecionado.getAttribute("id-amigo");
-
-//         const idsMensagens = data
-//             .filter((el) => el.amigo_id == idAmigoSelecionado)
-//             .map((el) => el.id);
-
-//         const response1 = await fetch(
-//             `http://localhost:3000/ler?idmensagem=${idsMensagens}`
-//         );
-//         const data1 = await response1.json();
-//     }
-// }, 100);
 
 mensagens.scrollTop = mensagens.scrollHeight;

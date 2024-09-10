@@ -101,15 +101,26 @@
                     >
                         <h5
                             id-amigo-not="<%=data1[i].amigo_id%>"
-                            class="nao-lidas"
-                        ></h5>
+                            class="nao-lidas <%=naoLidas?.filter(el => el.amigo_id == data1[i].amigo_id).length ? 'nao-lidas-style' : ''%>"
+                        >
+                            <%=naoLidas?.filter(el => el.amigo_id ==
+                            data1[i].amigo_id).length || "" %>
+                        </h5>
 
                         <h3><%= data1[i].nome_amigo %></h3>
 
                         <p
                             id-amigo-p="<%=data1[i].amigo_id%>"
                             class="last-message"
-                        ></p>
+                        >
+                            <%data2.forEach(el => { %> <%if(el.amigo_id ==
+                            data1[i].amigo_id) {%>
+                            <small
+                                ><%=el.status == 'enviada' ? 'Você' :
+                                el.nome_amigo%>: <%=el.mensagem%></small
+                            >
+                            <% } %> <% })%>
+                        </p>
                     </div>
                     <% } %> <% } %>
                 </div>

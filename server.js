@@ -94,6 +94,80 @@ io.on("connection", (socket) => {
 
         io.emit("receivedMessage", { idUser, idAmigo, mensagem, mensagem1 });
     });
+
+    socket.on("curtir", async (data) => {
+        const idPost = Number(data.idPost);
+        const numCurtidas = Number(data.numCurtidas);
+        const idUser = data.idUser;
+
+        const curtidasR = await db.query(
+            "UPDATE redesocialposts SET curtidas = $1 WHERE id = $2 RETURNING *",
+            [numCurtidas, idPost]
+        );
+
+        db.query(
+            "INSERT INTO minhascurtidas (post_id, user_id) VALUES($1, $2)",
+            [idPost, idUser]
+        );
+
+        const curtidas = curtidasR.rows[0];
+
+        io.emit("curtidas", { idPost, curtidas });
+    });
+
+    socket.on("descurtir", async (data) => {
+        const idPost = Number(data.idPost);
+        const numCurtidas = Number(data.numCurtidas);
+        const idUser = data.idUser;
+
+        const curtidasR = await db.query(
+            "UPDATE redesocialposts SET curtidas = $1 WHERE id = $2 RETURNING *",
+            [numCurtidas, idPost]
+        );
+
+        db.query(
+            "DELETE FROM minhascurtidas WHERE post_id = $1 AND user_id = $2",
+            [idPost, idUser]
+        );
+
+        const curtidas = curtidasR.rows[0];
+
+        io.emit("descurtidas", { idPost, curtidas });
+    });
+
+    socket.on("comentar", async (data) => {
+        const idPostAtual = Number(data.idPostAtual);
+        const user_nome = data.user_nome;
+        const user_usuario = data.user_usuario;
+        const comentario = data.comentario;
+        const idUser = data.idUser;
+
+        const result = await db.query(
+            "INSERT INTO redesocialcomentarios (comentario, post_id, user_nome, user_id, user_usuario) VALUES($1,$2,$3, $4, $5) RETURNING *",
+            [comentario, idPostAtual, user_nome, idUser, user_usuario]
+        );
+        const data1 = result.rows[0];
+
+        io.emit("comentario", { data1, idUser: data.idUser });
+    });
+
+    socket.on("deletarComentario", (data) => {
+        const idComentario = Number(data.idComentario);
+
+        db.query("DELETE FROM redesocialcomentarios WHERE id = $1", [
+            idComentario,
+        ]);
+
+        io.emit("comentarioDeletado", { idComentario });
+    });
+
+    socket.on("deletarPost", (data) => {
+        const idPostAtual = Number(data.idPostAtual);
+
+        db.query("DELETE FROM redesocialposts WHERE id = $1", [idPostAtual]);
+
+        io.emit("postDeletado", { idPostAtual });
+    });
 });
 
 app.get("/", (req, res) => {
@@ -149,6 +223,7 @@ app.get("/home", async (req, res) => {
     const data3 = result3.rows;
 
     const naoLidas = data3.filter((el) => el.lida === "nao");
+    console.log(naoLidas);
 
     const result4 = await db.query(
         "SELECT * FROM minhascurtidas WHERE user_id = $1",
@@ -454,48 +529,6 @@ app.get("/ler", async (req, res) => {
     });
 
     res.json("Lidas");
-});
-
-app.get("/curtir", async (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-
-    const idPost = Number(req.query.idpost);
-    const ac = req.query.ac;
-
-    const result = await db.query(
-        "SELECT curtidas FROM redesocialposts WHERE id = $1",
-        [idPost]
-    );
-    const curtidas = Number(result.rows[0].curtidas);
-
-    let result1;
-    let curtidasAtual;
-
-    if (ac === "curtir") {
-        result1 = await db.query(
-            "UPDATE redesocialposts SET curtidas = $1 WHERE id = $2 RETURNING curtidas",
-            [curtidas + 1, idPost]
-        );
-        curtidasAtual = result1.rows[0].curtidas;
-
-        db.query(
-            "INSERT INTO minhascurtidas (post_id, user_id) VALUES($1, $2)",
-            [idPost, req.session.user.id]
-        );
-    } else {
-        result1 = await db.query(
-            "UPDATE redesocialposts SET curtidas = $1 WHERE id = $2 RETURNING curtidas",
-            [curtidas - 1, idPost]
-        );
-        curtidasAtual = result1.rows[0].curtidas;
-
-        db.query(
-            "DELETE FROM minhascurtidas WHERE post_id = $1 AND user_id = $2",
-            [idPost, req.session.user.id]
-        );
-    }
-
-    res.json(curtidasAtual);
 });
 
 app.post("/new-comentario", async (req, res) => {

@@ -1,8 +1,18 @@
 <% if (data?.length > 0) { %>
 <div class="posts">
     <% for( let i = 0; i < data.length; i++ ) { %>
-    <div id-post="<%= data[i].id %>" class="post card p-4 mb-3 shadow-sm">
-        <h3 class="text-dark"><%= data[i].titulo %></h3>
+    <div
+        id-post="<%= data[i].id %>"
+        id-user-post="<%= data[i].user_id %>"
+        class="post card p-4 mb-3 shadow-sm"
+    >
+        <div class="titulo-btnDeletar">
+            <h3 class="text-dark"><%= data[i].titulo %></h3>
+            <% if (data[i].user_id == usuario.id) { %>
+            <button class="deletar-post">Deletar</button>
+            <% } %>
+        </div>
+
         <p class="mb-1"><%= data[i].texto %></p>
 
         <% if (data[i].imagem) { %>

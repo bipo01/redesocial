@@ -213,3 +213,8 @@ p[id-amigo-p] small {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.titulo-btnDeletar {
+    display: flex;
+    justify-content: space-between;
+}
