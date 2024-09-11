@@ -16,9 +16,7 @@ const idUser = document.querySelector("#idUser");
 const nomeUser = document.querySelector("#nomeUser");
 const usuarioUser = document.querySelector("#usuarioUser");
 
-const socket = io("https://redesocial-psi.vercel.app", {
-    transports: ["websocket"],
-});
+const socket = io();
 
 let dataAtual;
 

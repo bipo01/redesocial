@@ -1,8 +1,6 @@
 const btnCurtir = document.querySelectorAll(".btnCurtir");
 
-const socket = io("https://redesocial-psi.vercel.app", {
-    transports: ["websocket"],
-});
+const socket = io();
 
 document.querySelectorAll(".minhasCurtidas").forEach((el) => {
     document.querySelectorAll(".post").forEach((post) => {
