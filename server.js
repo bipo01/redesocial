@@ -24,7 +24,7 @@ db.connect();
 const server = http.createServer(app); // Altere isso para suportar o socket.io
 const io = new Server(server, {
     cors: {
-        origin: "*", // Substitua pela URL do seu front-end se possível
+        origin: "https://redesocial-d5bx.onrender.com", // Substitua pela URL do seu front-end se possível
         methods: ["GET", "POST"],
         credentials: true,
     },
