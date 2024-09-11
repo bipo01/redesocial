@@ -16,7 +16,9 @@ const idUser = document.querySelector("#idUser");
 const nomeUser = document.querySelector("#nomeUser");
 const usuarioUser = document.querySelector("#usuarioUser");
 
-const socket = io({ transports: ["websocket"] });
+const socket = io("https://redesocial-d5bx.onrender.com", {
+    transports: ["websocket"],
+});
 
 let dataAtual;
 

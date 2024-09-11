@@ -24,7 +24,9 @@ function comentario(el) {
 
 const idUser = document.querySelector("#idUser").value;
 
-const socke = io({ transports: ["websocket"] });
+const socke = io("https://redesocial-d5bx.onrender.com", {
+    transports: ["websocket"],
+});
 
 document.querySelectorAll("#comentario-form").forEach((el) => {
     el.addEventListener("submit", (e) => {
