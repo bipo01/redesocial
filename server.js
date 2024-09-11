@@ -473,49 +473,6 @@ app.post("/pegar-mensagens", async (req, res) => {
     res.json(data);
 });
 
-app.get("/pegar-mensagens-tempo-real", async (req, res) => {
-    if (!req.session.user) return;
-    const result = await db.query(
-        "SELECT * FROM redesocialmensagens WHERE user_id = $1 ORDER BY id ASC",
-        [req.session.user.id]
-    );
-    const data0 = result.rows;
-
-    const result1 = await db.query(
-        "SELECT * FROM redesocialamigos WHERE user_id = $1",
-        [req.session.user.id]
-    );
-    const data1 = result1.rows;
-
-    const result2 = await db.query(
-        "SELECT DISTINCT ON (amigo_id) * FROM redesocialmensagens WHERE user_id = $1 ORDER BY amigo_id, id DESC",
-        [req.session.user.id]
-    );
-    const data2 = result2.rows;
-
-    const data = {
-        data0,
-        data1,
-        data2,
-    };
-
-    res.json(data);
-});
-
-app.get("/notificacoes", async (req, res) => {
-    if (!req.session.user) return;
-
-    const result3 = await db.query(
-        "SELECT * FROM redesocialmensagens WHERE user_id = $1",
-        [req.session.user.id]
-    );
-    const data3 = result3.rows;
-
-    const naoLidas = data3.filter((el) => el.lida === "nao");
-
-    res.json(naoLidas);
-});
-
 app.get("/ler", async (req, res) => {
     if (!req.session.user) return;
 
