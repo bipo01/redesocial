@@ -22,7 +22,13 @@ const db = new pg.Client({
 db.connect();
 
 const server = http.createServer(app); // Altere isso para suportar o socket.io
-const io = new Server(server); // Crie o servidor socket.io
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Substitua pela URL do seu front-end se possível
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+}); // Crie o servidor socket.io
 
 app.use(
     cors({
