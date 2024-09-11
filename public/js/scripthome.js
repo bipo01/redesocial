@@ -57,7 +57,7 @@ socket.on("receivedMessage", (mensagem) => {
             const idsMensagens = mensagem.mensagem1.map((el) => el.id);
             console.log(idsMensagens);
             fetch(
-                `https://redesocial-phi.vercel.app/ler?idmensagem=${idsMensagens}`
+                `https://redesocial-psi.vercel.app/ler?idmensagem=${idsMensagens}`
             );
         }
     }
@@ -114,7 +114,7 @@ btnUsuarios.forEach((el) => {
         const urlParams = new URLSearchParams(formData);
 
         const response = await fetch(
-            "https://redesocial-phi.vercel.app/pegar-mensagens",
+            "https://redesocial-psi.vercel.app/pegar-mensagens",
             {
                 method: "post",
                 body: urlParams,
@@ -142,7 +142,7 @@ btnUsuarios.forEach((el) => {
             .map((el) => el.id);
 
         fetch(
-            `https://redesocial-phi.vercel.app/ler?idmensagem=${idsMensagens}`
+            `https://redesocial-psi.vercel.app/ler?idmensagem=${idsMensagens}`
         );
 
         btnUsuarios.forEach((el1) => {
@@ -170,7 +170,7 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     const idAmigo = enviarMensagemForm.children[0].children[1].value;
 
     const response = await fetch(
-        "https://redesocial-phi.vercel.app/enviar-mensagem",
+        "https://redesocial-psi.vercel.app/enviar-mensagem",
         {
             method: "post",
             body: urlParams,
