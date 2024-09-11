@@ -24,7 +24,7 @@ function comentario(el) {
 
 const idUser = document.querySelector("#idUser").value;
 
-const socke = io();
+const socke = io({ transports: ["websocket"] });
 
 document.querySelectorAll("#comentario-form").forEach((el) => {
     el.addEventListener("submit", (e) => {

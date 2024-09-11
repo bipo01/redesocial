@@ -16,7 +16,7 @@ const idUser = document.querySelector("#idUser");
 const nomeUser = document.querySelector("#nomeUser");
 const usuarioUser = document.querySelector("#usuarioUser");
 
-const socket = io();
+const socket = io({ transports: ["websocket"] });
 
 let dataAtual;
 
