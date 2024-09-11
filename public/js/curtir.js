@@ -1,8 +1,6 @@
 const btnCurtir = document.querySelectorAll(".btnCurtir");
 
-const socket = io("https://redesocial-d5bx.onrender.com", {
-    transports: ["websocket"],
-});
+const socket = io();
 
 document.querySelectorAll(".minhasCurtidas").forEach((el) => {
     document.querySelectorAll(".post").forEach((post) => {

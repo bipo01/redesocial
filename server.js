@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = "https://redesocial-d5bx.onrender.com";
+const port = 3000;
 const db = new pg.Client({
     connectionString:
         "postgres://default:Ef7gRnhwbD9B@ep-bold-limit-a48ldweb.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
@@ -24,7 +24,7 @@ db.connect();
 const server = http.createServer(app); // Altere isso para suportar o socket.io
 const io = new Server(server, {
     cors: {
-        origin: "https://redesocial-d5bx.onrender.com", // Substitua pela URL do seu front-end se possível
+        origin: "*", // Substitua pela URL do seu front-end se possível
         methods: ["GET", "POST"],
         credentials: true,
     },
