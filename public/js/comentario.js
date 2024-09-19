@@ -1,3 +1,5 @@
+const idUserC = document.querySelector("#idUser");
+
 document.querySelectorAll(".comentarios").forEach((el) => {
     if (!el.nextElementSibling.innerHTML.trim().length) {
         el.classList.remove("comentarios");
@@ -22,8 +24,6 @@ function comentario(el) {
     el.nextElementSibling.classList.toggle("hidden");
 }
 
-const idUser = document.querySelector("#idUser").value;
-
 const socke = io();
 
 document.querySelectorAll("#comentario-form").forEach((el) => {
@@ -34,10 +34,7 @@ document.querySelectorAll("#comentario-form").forEach((el) => {
         const user_usuario = el.children[2].value;
         const comentario = el.children[3];
 
-        console.log(idPostAtual);
-        console.log(user_nome);
-        console.log(user_usuario);
-        console.log(comentario);
+        console.log(`ID USER NOVO COMENTARIO: ${idUserC.value}`);
 
         if (comentario.value.trim().length > 0) {
             socke.emit("comentar", {
@@ -45,7 +42,7 @@ document.querySelectorAll("#comentario-form").forEach((el) => {
                 user_nome,
                 user_usuario,
                 comentario: comentario.value,
-                idUser,
+                idUser: idUserC.value,
             });
 
             comentario.value = "";
@@ -61,7 +58,12 @@ socke.on("comentario", (data) => {
         .querySelector(`[id-post='${post.post_id}']`)
         .getAttribute("id-user-post");
     let html;
-    if (idUser == idUserPost || data.idUser == idUser) {
+
+    console.log(data);
+    console.log(`ID USER ATUAL: ${idUserC.value}`);
+    console.log(`ID USER POST: ${idUserPost}`);
+    console.log(`ID USER: ${data.idUser}`);
+    if (idUserC.value == idUserPost || data.idUser == idUserC.value) {
         html = `
     <div idComentario="${post.id}" class="comentarioDiv">
                 <div class="pessoa-deletar">
@@ -113,7 +115,9 @@ socke.on("comentario", (data) => {
         });
     });
 
-    const comentarioP = postComentario.closest(".post").children[5];
+    const comentarioP = postComentario
+        .closest(".post")
+        .querySelector(".comentarioP");
 
     if (comentarioP.textContent === "Sem comentários") {
         comentarioP.classList.add("comentarios");
@@ -127,58 +131,31 @@ socke.on("comentario", (data) => {
     }
 });
 
-// socke.on("comentario1", (data) => {
-//     const post = data.data1;
-
-//     document
-//         .querySelector(`[id-post-comentario='${post.post_id}']`)
-//         .insertAdjacentHTML("beforeend", html);
-
-//     document.querySelectorAll(".comentarios").forEach((el) => {
-//         if (!el.nextElementSibling.innerHTML.trim().length) {
-//             el.classList.remove("comentarios");
-//             el.textContent = "Sem comentários";
-//         } else {
-//             el.classList.add("comentarios");
-//             el.textContent = "Ver comentários";
-//         }
-
-//         if (el.classList.contains("comentarios")) {
-//             el.addEventListener("click", () => {
-//                 comentario(el);
-//             });
-//         }
-//     });
-
-//     const postComentario = document.querySelector(
-//         `[id-post-comentario='${post.post_id}']`
-//     );
-
-//     const comentarioP = postComentario.closest(".post").children[5];
-//     comentarioP.textContent = "Ver comentários";
-//     comentarioP.classList.add("comentarios");
-
-//     if (comentarioP.classList.contains("comentarios")) {
-//         comentarioP.addEventListener("click", () => {
-//             comentario(comentarioP);
-//         });
-//     }
-// });
-
 socke.on("comentarioDeletado", (data) => {
     const comentarioAtual = document.querySelector(
         `[idComentario='${data.idComentario}']`
     );
 
-    if (comentarioAtual.closest(".post").children[6].children.length === 1) {
-        comentarioAtual.closest(".post").children[5].remove();
+    if (
+        comentarioAtual.closest(".post").querySelector(".comentarios-container")
+            .children.length === 1
+    ) {
+        comentarioAtual.closest(".post").querySelector(".comentarioP").remove();
         const p = document.createElement("p");
         p.textContent = "Sem comentários";
         p.classList.add("comentarioP");
         comentarioAtual
             .closest(".post")
-            .insertBefore(p, comentarioAtual.closest(".post").children[5]);
-        comentarioAtual.closest(".post").children[6].classList.add("hidden");
+            .insertBefore(
+                p,
+                comentarioAtual
+                    .closest(".post")
+                    .querySelector(".comentarios-container")
+            );
+        comentarioAtual
+            .closest(".post")
+            .querySelector(".comentarios-container")
+            .classList.add("hidden");
     }
 
     comentarioAtual.remove();

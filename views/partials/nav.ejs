@@ -1,5 +1,10 @@
-<% if (minhasCurtidas?.length > 0) { %> <% minhasCurtidas.forEach(function(el) {
-%>
+<input type="hidden" id="usuarioAtual" value="<%= usuario.usuario %>" />
+<input type="hidden" id="usuarioNome" value="<%= usuario.nome %>" />
+
+<% if (amigos?.length > 0) { %> <% amigos.forEach(el => { %>
+<input type="hidden" class="idAmigos" value="<%= el.amigo_id %>" />
+<%}) %> <% } %> <% if (minhasCurtidas?.length > 0) { %> <%
+minhasCurtidas.forEach(function(el) { %>
 <input
     type="hidden"
     user_id="<%= el.user_id %>"
@@ -47,7 +52,7 @@
                         class="form-control me-2 w-250"
                         type="search"
                         name="searchFriend"
-                        placeholder="Encontre novos amigos"
+                        placeholder="Buscar amigos"
                         aria-label="Search"
                     />
                     <button class="btn btn-outline-primary" type="submit">
@@ -60,6 +65,3 @@
         </div>
     </div>
 </nav>
-<button onclick="window.history.back();" class="btn-voltar btn btn-secondary">
-    Voltar
-</button>

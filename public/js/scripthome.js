@@ -2,6 +2,8 @@ const showAddPostBtn = document.querySelector("#show-add-post-btn");
 const addPostForm = document.querySelector("#add-post-form");
 const posts = document.querySelector(".posts");
 
+let msgSelecionadasArr = [];
+
 const mensagens = document.querySelector(".mensagens");
 const btnUsuarios = document.querySelectorAll(".btnUsuarios");
 const pegarMensagensForm = document.querySelector("#pegarMensagens");
@@ -15,6 +17,7 @@ const lastMessage = document.querySelectorAll(".last-message");
 const idUser = document.querySelector("#idUser");
 const nomeUser = document.querySelector("#nomeUser");
 const usuarioUser = document.querySelector("#usuarioUser");
+const usuarioAtual = document.querySelector("#usuarioAtual").value;
 
 const socket = io();
 
@@ -66,14 +69,67 @@ socket.on("receivedMessage", (mensagem) => {
 
     if (idUser.value == mensagem.idUser && idAmigoInput == mensagem.idAmigo) {
         mensagens.innerHTML = "";
+        const datasMsg = [];
+        const datasPostas = [];
         mensagem.mensagem.forEach((el) => {
+            if (!datasMsg.includes(el.data)) {
+                datasMsg.push(el.data);
+            }
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
             const html = `
-                            <p class='${el.status}'>
-                                ${el.mensagem}
+                            <p data-msg='${el.data}' id-msg='${
+                el.id
+            }' class='msg ${el.status}'>
+                               <span> ${el.mensagem} </span>
                                 <small id="hora">${el.hora}</small>
-                            </p>`;
+                            </p>
+                            ${
+                                datasPostas.includes(el.data)
+                                    ? ""
+                                    : `<h5 class='datasMsg'>${new Date(
+                                          el.data
+                                      ).toLocaleString("pt-br", {
+                                          year: "numeric",
+                                          month: "numeric",
+                                          day: "numeric",
+                                      })}</h5>`
+                            }
+                            `;
             mensagens.insertAdjacentHTML("afterbegin", html);
+            datasPostas.push(el.data);
+
+            document.querySelectorAll(".msg").forEach((btn) => {
+                if (!btn.classList.contains("functionDelete")) {
+                    console.log(btn);
+                    btn.classList.add("functionDelete");
+                    btn.addEventListener("dblclick", () => {
+                        const idMsg = btn.getAttribute("id-msg");
+                        btn.classList.toggle("msgSelecionada");
+                        if (btn.classList.contains("msgSelecionada")) {
+                            if (!msgSelecionadasArr.includes(idMsg)) {
+                                msgSelecionadasArr.push(idMsg);
+                            }
+                        } else {
+                            if (msgSelecionadasArr.includes(idMsg)) {
+                                const index = msgSelecionadasArr.indexOf(idMsg);
+                                msgSelecionadasArr.splice(index, 1);
+                            }
+                        }
+
+                        console.log(msgSelecionadasArr);
+
+                        if (msgSelecionadasArr.length > 0) {
+                            document
+                                .querySelector("#deletarMsgs")
+                                .classList.remove("hidden");
+                        } else {
+                            document
+                                .querySelector("#deletarMsgs")
+                                .classList.add("hidden");
+                        }
+                    });
+                }
+            });
         });
     } else if (
         idUser.value == mensagem.idAmigo &&
@@ -81,14 +137,69 @@ socket.on("receivedMessage", (mensagem) => {
     ) {
         mensagens.innerHTML = "";
 
+        const datasMsg = [];
+        const datasPostas = [];
+
         mensagem.mensagem1.forEach((el) => {
+            if (!datasMsg.includes(el.data)) {
+                datasMsg.push(el.data);
+            }
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
             const html = `
-                            <p class='${el.status}'>
-                                ${el.mensagem}
+                            <p data-msg='${el.data}' id-msg='${
+                el.id
+            }' class='msg ${el.status}'>
+                                <span>${el.mensagem}</span>
                                 <small id="hora">${el.hora}</small>
-                            </p>`;
+                            </p>
+                            ${
+                                datasPostas.includes(el.data)
+                                    ? ""
+                                    : `<h5 class='datasMsg'>${new Date(
+                                          el.data
+                                      ).toLocaleString("pt-br", {
+                                          year: "numeric",
+                                          month: "numeric",
+                                          day: "numeric",
+                                      })}</h5>`
+                            }
+                            `;
             mensagens.insertAdjacentHTML("afterbegin", html);
+            datasPostas.push(el.data);
+        });
+
+        document.querySelectorAll(".msg").forEach((btn) => {
+            if (!btn.classList.contains("functionDelete")) {
+                console.log(btn);
+                btn.classList.add("functionDelete");
+
+                btn.addEventListener("dblclick", () => {
+                    const idMsg = btn.getAttribute("id-msg");
+                    btn.classList.toggle("msgSelecionada");
+                    if (btn.classList.contains("msgSelecionada")) {
+                        if (!msgSelecionadasArr.includes(idMsg)) {
+                            msgSelecionadasArr.push(idMsg);
+                        }
+                    } else {
+                        if (msgSelecionadasArr.includes(idMsg)) {
+                            const index = msgSelecionadasArr.indexOf(idMsg);
+                            msgSelecionadasArr.splice(index, 1);
+                        }
+                    }
+
+                    console.log(msgSelecionadasArr);
+
+                    if (msgSelecionadasArr.length > 0) {
+                        document
+                            .querySelector("#deletarMsgs")
+                            .classList.remove("hidden");
+                    } else {
+                        document
+                            .querySelector("#deletarMsgs")
+                            .classList.add("hidden");
+                    }
+                });
+            }
         });
     }
 });
@@ -126,10 +237,71 @@ btnUsuarios.forEach((el) => {
 
         dataAtual = data;
 
+        const datasMsg = [];
+        const datasPostas = [];
         data.forEach((el) => {
+            if (!datasMsg.includes(el.data)) {
+                datasMsg.push(el.data);
+            }
+
             el.mensagem = el.mensagem.replaceAll("\n", "<br>");
-            const html = `<p class='${el.status}'>${el.mensagem}<small id="hora">${el.hora}</small></p>`;
+            let html;
+
+            html = `
+                    
+                    <p data-msg='${el.data}' id-msg='${el.id}' class='msg ${
+                el.status
+            }'>
+                    <span>${el.mensagem}</span>
+                    <small id="hora">${el.hora}</small></p>
+                    ${
+                        datasPostas.includes(el.data)
+                            ? ""
+                            : `<h5 class='datasMsg'>${new Date(
+                                  el.data
+                              ).toLocaleString("pt-br", {
+                                  year: "numeric",
+                                  month: "numeric",
+                                  day: "numeric",
+                              })}</h5>`
+                    }
+                    `;
+
             mensagens.insertAdjacentHTML("afterbegin", html);
+            datasPostas.push(el.data);
+        });
+
+        console.log(datasMsg);
+
+        document.querySelectorAll(".msg").forEach((btn) => {
+            if (btn.classList.contains("functionDelete")) return;
+            btn.classList.add("functionDelete");
+            btn.addEventListener("dblclick", () => {
+                const idMsg = btn.getAttribute("id-msg");
+                btn.classList.toggle("msgSelecionada");
+                if (btn.classList.contains("msgSelecionada")) {
+                    if (!msgSelecionadasArr.includes(idMsg)) {
+                        msgSelecionadasArr.push(idMsg);
+                    }
+                } else {
+                    if (msgSelecionadasArr.includes(idMsg)) {
+                        const index = msgSelecionadasArr.indexOf(idMsg);
+                        msgSelecionadasArr.splice(index, 1);
+                    }
+                }
+
+                console.log(msgSelecionadasArr);
+
+                if (msgSelecionadasArr.length > 0) {
+                    document
+                        .querySelector("#deletarMsgs")
+                        .classList.remove("hidden");
+                } else {
+                    document
+                        .querySelector("#deletarMsgs")
+                        .classList.add("hidden");
+                }
+            });
         });
 
         document.querySelector(`[id-amigo-not='${idAmigo}']`).innerHTML = "";
@@ -165,6 +337,9 @@ btnUsuarios.forEach((el) => {
 
 enviarMensagemForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (!mensagem.value.trim().length) return;
+
     const formData = new FormData(enviarMensagemForm);
     const urlParams = new URLSearchParams(formData);
     const idAmigo = enviarMensagemForm.children[0].children[1].value;
@@ -177,6 +352,8 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
         }
     );
 
+    msgSelecionadasArr = [];
+
     socket.emit("sendMessage", {
         idAmigo,
         idUser: idUser.value,
@@ -187,3 +364,101 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
 });
 
 mensagens.scrollTop = mensagens.scrollHeight;
+
+addPostForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const titulo = document.querySelector("#titulo");
+    const texto = document.querySelector("#texto");
+    const image = document.querySelector("#image");
+
+    const formData = new FormData(addPostForm);
+    const response = await fetch(
+        `https://redesocial-d5bx.onrender.com/add-post`,
+        {
+            method: "post",
+            body: formData,
+        }
+    );
+    const data = await response.json();
+    console.log(data);
+
+    titulo.value = "";
+    texto.value = "";
+    image.value = "";
+    addPostForm.classList.add("hidden");
+    showAddPostBtn.textContent = "Nova publicação";
+
+    socket.emit("novoPost", {
+        id: data.id,
+    });
+});
+
+document.querySelector("#deletarMsgs").addEventListener("click", () => {
+    msgSelecionadasArr.forEach((el) => {
+        document.querySelector(`[id-msg='${el}']`).remove();
+    });
+
+    socket.emit("deletarMsg", {
+        msgSelecionadasArr,
+    });
+
+    msgSelecionadasArr = [];
+
+    document.querySelector("#deletarMsgs").classList.add("hidden");
+    const idAmigoP = document.querySelector("#idAmigoP").value;
+
+    const lastMessage = document
+        .querySelector(".mensagens")
+        .querySelectorAll(".msg")[0];
+
+    const ultimaMensagem = document.querySelector(`[id-amigo-p='${idAmigoP}']`);
+
+    if (lastMessage) {
+        const statusLastMessage = lastMessage.classList.contains("enviada");
+        const lastMessageText = lastMessage.querySelector("span").textContent;
+        const nomeAmigo =
+            ultimaMensagem.parentElement.querySelector("h3").textContent;
+        ultimaMensagem.innerHTML = `<small>${
+            statusLastMessage ? "Você" : `${nomeAmigo}`
+        }: ${lastMessageText}</small>`;
+    } else {
+        ultimaMensagem.innerHTML = "";
+        mensagens.innerHTML = "";
+    }
+
+    const allMsgs = [...mensagens.querySelectorAll(".msg")];
+    const allDatas = [...mensagens.querySelectorAll("h5")];
+    const allDatasText = [];
+    const datasMsgArr = [];
+
+    allDatas.forEach((el) => {
+        allDatasText.push(el.textContent);
+    });
+    console.log(allDatasText);
+
+    allMsgs.forEach((el) => {
+        const dataAttr = el.getAttribute("data-msg");
+
+        const dataEd = new Date(dataAttr).toLocaleString("pt-br", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+        });
+        console.log(dataEd);
+
+        if (!datasMsgArr.includes(dataEd)) {
+            datasMsgArr.push(dataEd);
+        }
+    });
+
+    allDatasText.forEach((dt) => {
+        if (!datasMsgArr.includes(dt)) {
+            console.log(dt);
+            allDatas.forEach((el) => {
+                if (el.textContent == dt) {
+                    el.remove();
+                }
+            });
+        }
+    });
+});

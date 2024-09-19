@@ -80,6 +80,9 @@
                     <button type="submit" class="btn btn-primary">
                         Enviar
                     </button>
+                    <span class="hidden" id="deletarMsgs"
+                        ><i class="bi bi-trash3-fill"></i
+                    ></span>
                 </div>
             </form>
         </div>
@@ -92,29 +95,29 @@
                 </h4>
 
                 <div id="friend-messages">
-                    <% if (data1?.length > 0) { %> <% for( let i = 0; i <
-                    data1.length; i++ ) { %>
+                    <% if (amigos?.length > 0) { %> <% for( let i = 0; i <
+                    amigos.length; i++ ) { %>
 
                     <div
-                        id-amigo="<%=data1[i].amigo_id%>"
+                        id-amigo="<%=amigos[i].amigo_id%>"
                         class="amigo-mensagem btnUsuarios"
                     >
                         <h5
-                            id-amigo-not="<%=data1[i].amigo_id%>"
-                            class="nao-lidas <%=naoLidas?.filter(el => el.amigo_id == data1[i].amigo_id).length ? 'nao-lidas-style' : ''%>"
+                            id-amigo-not="<%=amigos[i].amigo_id%>"
+                            class="nao-lidas <%=naoLidas?.filter(el => el.amigo_id == amigos[i].amigo_id).length ? 'nao-lidas-style' : ''%>"
                         >
                             <%=naoLidas?.filter(el => el.amigo_id ==
-                            data1[i].amigo_id).length || "" %>
+                            amigos[i].amigo_id).length || "" %>
                         </h5>
 
-                        <h3><%= data1[i].nome_amigo %></h3>
+                        <h3><%= amigos[i].nome_amigo %></h3>
 
                         <p
-                            id-amigo-p="<%=data1[i].amigo_id%>"
+                            id-amigo-p="<%=amigos[i].amigo_id%>"
                             class="last-message"
                         >
                             <%data2.forEach(el => { %> <%if(el.amigo_id ==
-                            data1[i].amigo_id) {%>
+                            amigos[i].amigo_id) {%>
                             <small
                                 ><%=el.status == 'enviada' ? 'Você' :
                                 el.nome_amigo%>: <%=el.mensagem%></small

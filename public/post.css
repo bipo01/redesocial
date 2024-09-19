@@ -1,55 +1,72 @@
-/* CSS Geral */
+/* Estilização Geral */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
+    font-family: "Poppins", Arial, sans-serif;
+    background-color: #f4f4f9; /* Fundo claro */
+    color: #343a40; /* Texto escuro */
+    line-height: 1.6;
 }
 
 /* Estilização dos Posts */
 .posts {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
     margin: 0 auto;
     max-width: 800px;
-    padding: 1rem;
+    padding: 2rem 1rem;
 }
 
 .post {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    position: relative;
-    transition: box-shadow 0.3s ease;
+    background-color: #ffffff; /* Fundo branco dos posts */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 2rem;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .post:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Sombra mais forte ao hover */
+    transform: translateY(-4px); /* Efeito de elevação */
 }
 
 .post img {
     border-radius: 8px;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     max-height: 400px;
     object-fit: cover;
+    width: 100%;
 }
 
+/* Título do Post */
 h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #343a40; /* Título mais escuro */
+    font-weight: 600;
+    line-height: 1.2;
 }
 
+/* Texto do Post */
 p {
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    color: #595959;
 }
 
+/* Data do Post */
+small {
+    font-size: 0.9rem;
+    color: #999; /* Texto da data em cinza suave */
+}
+
+/* User e Curtidas */
 .user-curtida {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
 }
 
 .num-curtidas {
@@ -60,73 +77,110 @@ p {
 
 .btnCurtir {
     cursor: pointer;
-    color: #007bff;
-    font-size: 1.2rem;
+    color: #ff6b6b;
+    font-size: 1.4rem;
 }
 
 .btnCurtir:hover {
-    color: #0056b3;
+    color: #ff3b3b;
 }
 
-.comentarioP {
-    color: #007bff;
-    font-weight: bold;
+/* Botão Deletar */
+button.deletar-post {
+    background-color: #ff6b6b;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
+button.deletar-post:hover {
+    background-color: #ff3b3b;
+}
+
+/* Estilização dos Comentários */
 .comentarios-container {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     border-top: 1px solid #e9ecef;
     padding-top: 1rem;
 }
 
 .comentarioDiv {
-    background-color: #f1f3f5;
+    background-color: #f8f9fa; /* Fundo claro dos comentários */
     border-radius: 8px;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 
 .comentarioDiv p {
     margin: 0;
+    font-size: 1rem;
+    color: #343a40;
 }
 
 .deletar-comentario button {
     background: none;
     border: none;
     cursor: pointer;
-    color: #dc3545;
+    color: #ff6b6b;
     font-size: 1.2rem;
 }
 
 .deletar-comentario button:hover {
-    color: #c82333;
+    color: #ff3b3b;
 }
 
+.pessoa-deletar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.pessoa-deletar p {
+    font-weight: bold;
+    color: #343a40; /* Nome do usuário escuro */
+}
+
+/* Formulário de Comentário */
 form#comentario-form {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: center;
 }
 
 form#comentario-form input[type="text"] {
     border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 0.5rem;
+    border-radius: 8px;
+    padding: 0.8rem;
+    background-color: #f8f9fa;
+    color: #495057;
     width: 100%;
     font-size: 1rem;
+}
+
+form#comentario-form input[type="text"]::placeholder {
+    color: #adb5bd;
 }
 
 form#comentario-form button {
     background-color: #007bff;
     border: none;
-    border-radius: 4px;
-    color: #ffffff;
-    cursor: pointer;
-    padding: 0.5rem;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.8rem 1.2rem;
     font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 form#comentario-form button:hover {
@@ -134,14 +188,18 @@ form#comentario-form button:hover {
 }
 
 /* Estilo para a mensagem de "Nenhuma postagem" */
-h3 {
-    color: #6c757d;
+h3#no-posts {
+    color: #888;
+    text-align: center;
 }
 
-.pessoa-deletar {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    border-bottom: 0.1px solid gray;
-    outline: none;
+/* Estilo Geral dos Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
 }

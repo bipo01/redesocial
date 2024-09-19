@@ -16,8 +16,13 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = 3000;
 const db = new pg.Client({
-    connectionString:
-        "postgres://default:Ef7gRnhwbD9B@ep-bold-limit-a48ldweb.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
+    // connectionString:
+    //     "postgres://default:Ef7gRnhwbD9B@ep-bold-limit-a48ldweb.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
+    user: "postgres",
+    password: "JSBispo121511!",
+    database: "projetos",
+    host: "localhost",
+    port: 5432,
 });
 db.connect();
 
@@ -174,6 +179,30 @@ io.on("connection", (socket) => {
 
         io.emit("postDeletado", { idPostAtual });
     });
+
+    socket.on("novoPost", async (data) => {
+        const idPost = Number(data.id);
+
+        const result = await db.query(
+            "SELECT * FROM redesocialposts WHERE id = $1",
+            [idPost]
+        );
+        const post = result.rows[0];
+
+        io.emit("postNovo", {
+            post,
+        });
+    });
+
+    socket.on("deletarMsg", (data) => {
+        if (data?.msgSelecionadasArr.length > 0) {
+            data.msgSelecionadasArr.forEach((el) => {
+                db.query("DELETE FROM redesocialmensagens WHERE id = $1", [
+                    Number(el),
+                ]);
+            });
+        }
+    });
 });
 
 app.get("/", (req, res) => {
@@ -210,11 +239,11 @@ app.get("/home", async (req, res) => {
     const data = result.rows;
     const idPosts = data.map((el) => Number(el.id));
 
-    const result1 = await db.query(
+    const amigosR = await db.query(
         "SELECT * FROM redesocialamigos WHERE user_id = $1",
         [req.session.user.id]
     );
-    const data1 = result1.rows;
+    const amigos = amigosR.rows;
 
     const result2 = await db.query(
         "SELECT DISTINCT ON (amigo_id) * FROM redesocialmensagens WHERE user_id = $1 ORDER BY amigo_id, id DESC",
@@ -245,7 +274,7 @@ app.get("/home", async (req, res) => {
 
     return res.render("home.ejs", {
         data: data,
-        data1: data1,
+        amigos,
         data2: data2,
         naoLidas: naoLidas,
         usuario: req.session.user,
@@ -261,6 +290,13 @@ app.get("/all-posts", async (req, res) => {
         [req.session.user.id]
     );
     const data1 = result1.rows?.map((el) => el.amigo_id);
+    console.log(data1);
+
+    const amigosR = await db.query(
+        "SELECT * FROM redesocialamigos WHERE user_id = $1",
+        [req.session.user.id]
+    );
+    const amigos = amigosR.rows;
 
     let data;
     let result;
@@ -269,7 +305,7 @@ app.get("/all-posts", async (req, res) => {
 
     if (data1.length > 0) {
         result = await db.query(
-            "SELECT * FROM redesocialposts WHERE user_id = ANY($1::int[])",
+            "SELECT * FROM redesocialposts WHERE user_id = ANY($1::int[]) ORDER BY id DESC",
             [data1]
         );
         data = result.rows;
@@ -294,6 +330,7 @@ app.get("/all-posts", async (req, res) => {
         minhasCurtidas,
         comentarios: comentariosD,
         usuario: req.session.user,
+        amigos,
     });
 });
 
@@ -361,7 +398,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-app.post("/add-post", upload.single("image"), (req, res) => {
+app.post("/add-post", upload.single("image"), async (req, res) => {
     const titulo = req.body.titulo;
     const texto = req.body.texto;
     const data = new Date();
@@ -369,8 +406,8 @@ app.post("/add-post", upload.single("image"), (req, res) => {
 
     console.log(imagePath);
 
-    db.query(
-        "INSERT INTO redesocialposts (titulo, texto, data, user_id, user_name, curtidas, imagem) VALUES($1,$2,$3, $4, $5, $6, $7)",
+    const result = await db.query(
+        "INSERT INTO redesocialposts (titulo, texto, data, user_id, user_name, curtidas, imagem) VALUES($1,$2,$3, $4, $5, $6, $7) RETURNING id",
         [
             titulo,
             texto,
@@ -381,20 +418,29 @@ app.post("/add-post", upload.single("image"), (req, res) => {
             imagePath,
         ]
     );
+    const id = result.rows[0];
 
-    return res.redirect("/home");
+    res.json(id);
 });
 
 app.post("/buscar-amigo", async (req, res) => {
+    if (!req.session.user) return res.redirect("/");
     const amigosResult = await db.query(
         "SELECT * FROM redesocialamigos WHERE user_id = $1",
         [req.session.user.id]
     );
+    const amigosJaAddId = amigosResult.rows.map((el) => el.amigo_id);
+    const amigosJaAddResult = await db.query(
+        "SELECT * FROM redesocialuser WHERE id = ANY($1::int[])",
+        [amigosJaAddId]
+    );
+    const amigosJaAdd = amigosJaAddResult.rows;
+
     const amigosData = amigosResult.rows.map((el) => Number(el.amigo_id));
 
     const search = req.body.searchFriend;
     const placeholders = amigosData.map((_, i) => `$${i + 3}`).join(", ");
-
+    req.session.search = search;
     const query =
         amigosData.length > 0
             ? `SELECT * FROM redesocialuser WHERE (usuario LIKE $1 OR nome LIKE $1) AND usuario != $2 AND id NOT IN (${placeholders})`
@@ -406,7 +452,14 @@ app.post("/buscar-amigo", async (req, res) => {
     const result = await db.query(query, params);
     const data = result.rows;
 
-    return res.render("buscandoamigos.ejs", { data: data, search: search });
+    return res.render("buscandoamigos.ejs", {
+        data: data,
+        search: search,
+        amigosJaAdd,
+        usuario: req.session.user,
+        amigos: false,
+        minhasCurtidas: false,
+    });
 });
 
 app.post("/add-amigo", (req, res) => {
@@ -422,7 +475,7 @@ app.post("/add-amigo", (req, res) => {
         [req.session.user.id, idAmigo, req.session.user.usuario]
     );
 
-    return res.redirect("/home");
+    return res.redirect("/buscar-amigo");
 });
 
 app.post("/enviar-mensagem", async (req, res) => {
@@ -513,6 +566,62 @@ app.post("/delete-comentario", (req, res) => {
     db.query("DELETE FROM redesocialcomentarios WHERE id = $1", [
         req.body.idComentario,
     ]);
+});
+
+app.post("/deletar-amigo", async (req, res) => {
+    const idAmigo = req.body.idAmigo;
+    db.query(
+        "DELETE FROM redesocialamigos WHERE amigo_id = $1 AND user_id = $2",
+        [idAmigo, req.session.user.id]
+    );
+    db.query(
+        "DELETE FROM redesocialamigos WHERE amigo_id = $1 AND user_id = $2",
+        [req.session.user.id, idAmigo]
+    );
+
+    return res.redirect("/buscar-amigo");
+});
+
+app.get("/buscar-amigo", async (req, res) => {
+    if (!req.session.user) return res.redirect("/");
+    const amigosResult = await db.query(
+        "SELECT * FROM redesocialamigos WHERE user_id = $1",
+        [req.session.user.id]
+    );
+    const amigosJaAddId = amigosResult.rows.map((el) => el.amigo_id);
+    const amigosJaAddResult = await db.query(
+        "SELECT * FROM redesocialuser WHERE id = ANY($1::int[])",
+        [amigosJaAddId]
+    );
+    const amigosJaAdd = amigosJaAddResult.rows;
+
+    const amigosData = amigosResult.rows.map((el) => Number(el.amigo_id));
+
+    const placeholders = amigosData.map((_, i) => `$${i + 3}`).join(", ");
+
+    const query =
+        amigosData.length > 0
+            ? `SELECT * FROM redesocialuser WHERE (usuario LIKE $1 OR nome LIKE $1) AND usuario != $2 AND id NOT IN (${placeholders})`
+            : `SELECT * FROM redesocialuser WHERE (usuario LIKE $1 OR nome LIKE $1) AND usuario != $2`;
+
+    // Adicionar os parâmetros à lista
+    const params = [
+        `%${req.session.search}%`,
+        req.session.user.usuario,
+        ...amigosData,
+    ];
+
+    const result = await db.query(query, params);
+    const data = result.rows;
+
+    return res.render("buscandoamigos.ejs", {
+        data: data,
+        search: req.session.search,
+        amigosJaAdd,
+        usuario: req.session.user,
+        amigos: false,
+        minhasCurtidas: false,
+    });
 });
 
 app.get("/log-out", (req, res) => {

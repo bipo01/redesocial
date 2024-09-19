@@ -218,3 +218,45 @@ p[id-amigo-p] small {
     display: flex;
     justify-content: space-between;
 }
+
+.msg {
+    cursor: pointer;
+}
+
+.msgSelecionada {
+    background: gray !important;
+}
+
+#deletarMsgs {
+    cursor: pointer;
+    font-size: 1.4rem;
+    position: absolute;
+    right: 5%;
+}
+
+.imagem-post {
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 400px; /* Limite de altura para o contêiner da imagem */
+    overflow: hidden; /* Esconde partes da imagem que excedem os limites */
+}
+
+#post-img {
+    width: 100%;
+    height: 100%; /* Faz com que a imagem preencha toda a altura do contêiner */
+    object-fit: contain; /* Garante que a imagem cubra toda a área do contêiner sem distorção */
+    margin: 20px auto;
+}
+
+.datasMsg {
+    background: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    width: fit-content;
+    border-radius: 10px;
+    margin: 20px auto;
+}

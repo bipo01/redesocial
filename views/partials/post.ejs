@@ -1,6 +1,5 @@
-<% if (data?.length > 0) { %>
 <div class="posts">
-    <% for( let i = 0; i < data.length; i++ ) { %>
+    <% if (data?.length > 0) { %> <% for( let i = 0; i < data.length; i++ ) { %>
     <div
         id-post="<%= data[i].id %>"
         id-user-post="<%= data[i].user_id %>"
@@ -9,18 +8,17 @@
         <div class="titulo-btnDeletar">
             <h3 class="text-dark"><%= data[i].titulo %></h3>
             <% if (data[i].user_id == usuario.id) { %>
-            <button class="deletar-post">Deletar</button>
+
+            <button class="btn btn-danger deletar-post">Deletar</button>
             <% } %>
         </div>
 
         <p class="mb-1"><%= data[i].texto %></p>
 
         <% if (data[i].imagem) { %>
-        <img
-            src="<%= data[i].imagem %>"
-            alt="Post Image"
-            style="max-width: 100%"
-        />
+        <div class="imagem-post">
+            <img id="post-img" src="<%= data[i].imagem %>" alt="Post Image" />
+        </div>
         <% } %>
 
         <small class="text-muted"
@@ -93,10 +91,9 @@
             <button type="submit">Adicionar</button>
         </form>
     </div>
-    <% } %>
+    <% } %> <% } else { %>
+    <div>
+        <h3 id="no-posts" style="text-align: center">Nenhuma postagem...</h3>
+    </div>
+    <%}%>
 </div>
-<% } else { %>
-<div>
-    <h3 style="text-align: center">Nenhuma postagem...</h3>
-</div>
-<%}%>
