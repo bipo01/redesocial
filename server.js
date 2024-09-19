@@ -414,8 +414,9 @@ app.post("/add-post", upload.single("image"), async (req, res) => {
         ]
     );
     const id = result.rows[0];
+    console.log(id);
 
-    res.json(id);
+    return res.json(id);
 });
 
 app.post("/buscar-amigo", async (req, res) => {
