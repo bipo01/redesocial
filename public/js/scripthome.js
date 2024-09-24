@@ -59,9 +59,7 @@ socket.on("receivedMessage", (mensagem) => {
         } else {
             const idsMensagens = mensagem.mensagem1.map((el) => el.id);
             console.log(idsMensagens);
-            fetch(
-                `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
-            );
+            fetch(`http://localhost:3000/ler?idmensagem=${idsMensagens}`);
         }
     }
 
@@ -205,6 +203,9 @@ socket.on("receivedMessage", (mensagem) => {
 });
 
 showAddPostBtn.addEventListener("click", () => {
+    addPostForm.querySelectorAll("input").forEach((el) => (el.value = ""));
+    addPostForm.querySelectorAll("textarea").forEach((el) => (el.value = ""));
+
     addPostForm.classList.toggle("hidden");
     const isHidden = addPostForm.classList.contains("hidden");
 
@@ -224,13 +225,10 @@ btnUsuarios.forEach((el) => {
         const formData = new FormData(pegarMensagensForm);
         const urlParams = new URLSearchParams(formData);
 
-        const response = await fetch(
-            "https://redesocial-d5bx.onrender.com/pegar-mensagens",
-            {
-                method: "post",
-                body: urlParams,
-            }
-        );
+        const response = await fetch("http://localhost:3000/pegar-mensagens", {
+            method: "post",
+            body: urlParams,
+        });
         const data = await response.json();
 
         mensagens.innerHTML = "";
@@ -313,9 +311,7 @@ btnUsuarios.forEach((el) => {
             .filter((el) => el.amigo_id == idAmigo)
             .map((el) => el.id);
 
-        fetch(
-            `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
-        );
+        fetch(`http://localhost:3000/ler?idmensagem=${idsMensagens}`);
 
         btnUsuarios.forEach((el1) => {
             if (el1 !== el) {
@@ -344,13 +340,10 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     const urlParams = new URLSearchParams(formData);
     const idAmigo = enviarMensagemForm.children[0].children[1].value;
 
-    const response = await fetch(
-        "https://redesocial-d5bx.onrender.com/enviar-mensagem",
-        {
-            method: "post",
-            body: urlParams,
-        }
-    );
+    const response = await fetch("http://localhost:3000/enviar-mensagem", {
+        method: "post",
+        body: urlParams,
+    });
 
     msgSelecionadasArr = [];
 
@@ -372,13 +365,10 @@ addPostForm.addEventListener("submit", async (e) => {
     const image = document.querySelector("#image");
 
     const formData = new FormData(addPostForm);
-    const response = await fetch(
-        `https://redesocial-d5bx.onrender.com/add-post`,
-        {
-            method: "post",
-            body: formData,
-        }
-    );
+    const response = await fetch(`http://localhost:3000/add-post`, {
+        method: "post",
+        body: formData,
+    });
     const data = await response.json();
     console.log(data);
 

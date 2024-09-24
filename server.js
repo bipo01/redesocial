@@ -62,23 +62,15 @@ app.use(
 );
 
 const storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-        // Defina o caminho correto dentro da pasta public
-        callback(null, path.join(__dirname, "public", "files"));
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, "public/files")); // Garante que o caminho esteja correto
     },
-    filename: function (req, file, callback) {
-        const ext = path.extname(file.originalname);
-
-        console.log(file.originalname);
-
-        const filename = `file_${Date.now()}${ext}`; // Use um timestamp único
-        callback(null, filename);
+    filename: function (req, file, cb) {
+        cb(null, "file_" + Date.now() + path.extname(file.originalname));
     },
 });
 
-const upload = multer({
-    storage: storage,
-});
+const upload = multer({ storage: storage });
 
 io.on("connection", (socket) => {
     socket.on("sendMessage", async (data) => {
