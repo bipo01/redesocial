@@ -60,7 +60,7 @@ socket.on("receivedMessage", (mensagem) => {
             const idsMensagens = mensagem.mensagem1.map((el) => el.id);
             console.log(idsMensagens);
             fetch(
-                `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
+                `https://redesocial-five.vercel.app/ler?idmensagem=${idsMensagens}`
             );
         }
     }
@@ -228,7 +228,7 @@ btnUsuarios.forEach((el) => {
         const urlParams = new URLSearchParams(formData);
 
         const response = await fetch(
-            "https://redesocial-d5bx.onrender.com/pegar-mensagens",
+            "https://redesocial-five.vercel.app/pegar-mensagens",
             {
                 method: "post",
                 body: urlParams,
@@ -317,7 +317,7 @@ btnUsuarios.forEach((el) => {
             .map((el) => el.id);
 
         fetch(
-            `https://redesocial-d5bx.onrender.com/ler?idmensagem=${idsMensagens}`
+            `https://redesocial-five.vercel.app/ler?idmensagem=${idsMensagens}`
         );
 
         btnUsuarios.forEach((el1) => {
@@ -348,7 +348,7 @@ enviarMensagemForm.addEventListener("submit", async (e) => {
     const idAmigo = enviarMensagemForm.children[0].children[1].value;
 
     const response = await fetch(
-        "https://redesocial-d5bx.onrender.com/enviar-mensagem",
+        "https://redesocial-five.vercel.app/enviar-mensagem",
         {
             method: "post",
             body: urlParams,
@@ -376,7 +376,7 @@ addPostForm.addEventListener("submit", async (e) => {
 
     const formData = new FormData(addPostForm);
     const response = await fetch(
-        `https://redesocial-d5bx.onrender.com/add-post`,
+        `https://redesocial-five.vercel.app/add-post`,
         {
             method: "post",
             body: formData,
